@@ -1,0 +1,4 @@
+*.dtbo
+*.scr
+debian/files
+debian/*substvars
