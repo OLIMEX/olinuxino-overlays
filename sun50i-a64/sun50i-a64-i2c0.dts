@@ -1,0 +1,14 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64";
+	description = "Enable TWI0 bus";
+
+	fragment@0 {
+		target = <&i2c0>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};

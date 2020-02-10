@@ -1,0 +1,38 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun7i-a20";
+	description = "Enable SPI2 bus on PB";
+
+	fragment@0 {
+		target-path = "/aliases";
+		__overlay__ {
+			spi2 = "/soc/spi@1c17000";
+		};
+	};
+
+	fragment@1 {
+		target = <&pio>;
+		__overlay__ {
+			spi2_pb_pins: spi2-pb-pins {
+				pins = "PB15", "PB16", "PB17";
+				function = "spi2";
+			};
+
+			spi2_cs0_pb_pin: spi2-cs0-pb-pin {
+				pins = "PB14";
+				function = "spi2";
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&spi2>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&spi2_pb_pins>, <&spi2_cs0_pb_pin>;
+			status = "okay";
+		};
+	};
+};

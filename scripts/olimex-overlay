@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# Set default resolution
+X=80
+Y=20
+if which resize > /dev/null; then
+	eval $(resize)
+	X=$COLUMNS
+	Y=$LINES
+fi
+
+# Detect family
+for comp in $(cat "/proc/device-tree/compatible" | tr '\0' '\n'); do
+	if [[ "$comp" == "allwinner,sun"* ]]; then
+		compatible=$(cut -d',' -f2 <<< $comp)
+		break
+	fi
+done
+
+if [[ -z $compatible ]]; then
+	echo "The board is not Allwinner SoC. Exiting."
+	exit 0
+fi
+
+if [[ ! -d "/usr/lib/olimex-sunxi-overlays/$compatible" ]]; then
+	echo "The $compatible SoC family is not supported. Exiting."
+	exit 0
+fi
+
+# Get currently installed overlays
+INSTALLED=""
+if [[ -e "/boot/uEnv.txt" ]]; then
+	while read line; do
+		if [[ "$line" == "fdtoverlays="* ]]; then
+			INSTALLED="$(cut -d '=' -f2 <<< "$line")"
+			break
+		fi
+	done <<< "$(cat "/boot/uEnv.txt")"
+fi
+
+# Source available files
+OVERLAYS=()
+MENU=()
+for f in $(find "/usr/lib/olimex-sunxi-overlays/$compatible/" -type f -name "*.dtbo" | sort); do
+
+	# Check if overlay is compatible
+	[[ "$(fdtget $f / compatible)" != "allwinner,$compatible" ]] && continue
+
+	OVERLAYS+=("$f")
+	MENU+=("$(basename $f)" "$(fdtget $f / description)")
+
+	if [[ "$INSTALLED" == *"$(basename $f)"* ]]; then
+		MENU+=("ON")
+	else
+		MENU+=("OFF")
+	fi
+done
+
+whiptail --title "Enable FDT overlays" --checklist --separate-output \
+"Available overlays:" $Y $X $(( $Y - 8 )) "${MENU[@]}" 2>results
+
+# Get enabled overlays
+ENABLED=()
+while read line; do
+	ENABLED+=("$line")
+done < results
+rm -f results
+
+# Finally enable/disable overlays
+LIST="overlays="
+
+# Get custom overlays
+for overlay in ${INSTALLED[@]}; do
+	# Check if overlay is custom overlay
+	if [[ ! "${OVERLAYS[@]}" =~ "$overlay" ]]; then
+		LIST="$LIST$overlay "
+	fi
+done
+
+# Add olimex provided overlays
+for overlay in ${OVERLAYS[@]}; do
+	if [[ "${ENABLED[@]}" =~ "$(basename $overlay)" ]]; then
+		LIST="$LIST$overlay "
+	fi
+done
+
+# Modify /boot/uEnv.txt
+if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^overlays=" "/boot/uEnv.txt"; then
+	echo $LIST >> "/boot/uEnv.txt"
+else
+	sed -i "s/overlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
+fi

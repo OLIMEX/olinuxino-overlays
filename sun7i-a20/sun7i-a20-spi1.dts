@@ -1,0 +1,38 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun7i-a20";
+	description = "Enable SPI1 bus";
+
+	fragment@0 {
+		target-path = "/aliases";
+		__overlay__ {
+			spi1 = "/soc/spi@1c06000";
+		};
+	};
+
+	fragment@1 {
+		target = <&pio>;
+		__overlay__ {
+			spi1_pi_pins: spi1-pi-pins {
+				pins = "PI17", "PI18", "PI19";
+				function = "spi1";
+			};
+
+			spi1_cs0_pi_pin: spi1-cs0-pi-pin {
+				pins = "PI16";
+				function = "spi1";
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&spi1>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&spi1_pi_pins>, <&spi1_cs0_pi_pin>;
+			status = "okay";
+		};
+	};
+};

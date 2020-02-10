@@ -1,0 +1,31 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,a20-olinuxino-lime2",
+		     "olimex,a20-olinuxino-lime2-emmc";
+
+	fragment@0 {
+		target = <&pio>;
+		__overlay__ {
+			mmc1_pins: mmc1-pins {
+				pins = "PG0", "PG1", "PG2",
+				       "PG3", "PG4", "PG5";
+				function = "mmc1";
+				drive-strength = <30>;
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&mmc1>;
+		__overlay__ {
+			broken-cd;
+			bus-width = <4>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&mmc1_pins>;
+			status = "okay";
+			vmmc-supply = <&reg_vcc3v3>;
+		};
+	};
+};

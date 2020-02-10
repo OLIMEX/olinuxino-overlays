@@ -1,0 +1,33 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun7i-a20";
+	description = "Enable UART3 port";
+
+	fragment@0 {
+		target-path = "/aliases";
+		__overlay__ {
+			serial3 = "/soc@1c00000/serial@1c28c00";
+		};
+	};
+
+	fragment@1 {
+		target = <&pio>;
+		__overlay__ {
+			uart3_pg_pins: uart3-pg-pins {
+				pins = "PG6", "PG7";
+				function = "uart3";
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&uart3>;
+		 __overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart3_pg_pins>;
+			status = "okay";
+		};
+	};
+};

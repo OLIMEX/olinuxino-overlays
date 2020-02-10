@@ -1,0 +1,20 @@
+Source: olinuxino-overlays
+Maintainer: Olimex Dev team <support@olimex.com>
+Section: kernel
+Priority: optional
+Standards-Version: 4.1.4
+Vcs-Browser: https://github.com/OLIMEX/OLIMEX-sunxi-overlays
+Vcs-git: https://github.com/OLIMEX/OLIMEX-sunxi-overlays.git
+Build-Depends:
+ debhelper (== 12),
+ device-tree-compiler,
+ u-boot-tools
+
+Package: olinuxino-overlays
+Architecture: all
+Section: kernel
+Priority: optional
+Depends: ${misc:Depends}
+Description: FDT overlays for OLinuXino platform
+ .
+ This package provides various helper overlays for I2C, SPI, UART, etc.
