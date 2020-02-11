@@ -64,6 +64,8 @@ build with sign:
     # Unlock gpg keyring
     - gpg --no-tty --batch --yes --import $SIGN_KEY
     - echo "" | gpg2 --pinentry-mode loopback --passphrase $GPG_PASS --sign -u $GPG_USER > /dev/null
+  except:
+    - branches
   only:
     - tags
     - /^debian/
