@@ -17,18 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 DTC ?= dtc
-ARCH ?= arm
 
 # Find all files
 DTS	= $(sort  $(shell find $(SOURCEDIR) -name '*.dts'))
 DTBO	= $(DTS:%.dts=%.dtbo)
 
-.PHONY: all
-all: $(DTBO) $(SCR)
-
 %.dtbo: %.dts
 	@echo "  DTC     " $@
 	@$(DTC) -q -@ -I dts -O dtb -o $@ $<
+
+.PHONY: all
+all: $(DTBO)
 
 .PHONY: clean
 clean:
