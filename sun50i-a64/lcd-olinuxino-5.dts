@@ -71,24 +71,4 @@
 			status = "disabled";
 		};
 	};
-
-	fragment@5 {
-		target = <&i2c0>;
-		__overlay__ {
-			status = "okay";
-
-			ft5x@38 {
-				compatible = "edt,edt-ft5306";
-				reg = <0x38>;
-				touchscreen-size-x = <800>;
-				touchscreen-size-y = <480>;
-
-				interrupt-parent = <&pio>;
-				interrupts = <7 7 2>;
-
-				irq-gpios = <&pio 7 7 0>;
-				reset-gpios = <&pio 7 8 1>;
-			};
-		};
-	};
 };
