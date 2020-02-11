@@ -1,0 +1,34 @@
+default:
+  image: debian:sid
+
+.build_kernel_dtbs: &build_kernel_dtbs
+  - apt-get update && apt-get install -y bison gcc flex lftp make wget xz-utils
+  - lftp -e "cls -1 > /tmp/kernel; exit" "http://cdn.kernel.org/pub/linux/kernel/v5.x/"
+  - FILE=$(grep ^linux-$KERNEL.*.tar.xz /tmp/kernel | sort -V | tail -n1)
+  - TARGET_DIR="$PWD/test/targets" && mkdir -p $TARGET_DIR/sun7i-a20 $TARGET_DIR/sun50i-a64
+  - pushd $(mktemp -d)
+  - wget https://cdn.kernel.org/pub/linux/kernel/v5.x/$FILE
+  - tar xf $FILE && cd "${FILE%.*.*}"
+  # Generate armhf dtbs
+  - make ARCH=arm defconfig && make ARCH=arm dtbs -j$(nproc)
+  - cp -vf arch/arm/boot/dts/sun7i-a20-oli*.dtb $TARGET_DIR/sun7i-a20/
+  # Generate arm64 dtbs
+  - make clean && make ARCH=arm64 defconfig && make ARCH=arm64 dtbs -j$(nproc)
+  - cp -vf arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino*.dtb $TARGET_DIR/sun50i-a64/
+  - popd
+
+stages:
+  - test
+
+test:
+  before_script:
+    # Uncomment the following, to download and build latest dtbs
+    # - *build_kernel_dtbs
+    - apt-get update && apt-get install -y bats device-tree-compiler
+  only:
+    - branches
+  script:
+    - cd test && bash bootstrap.sh
+  stage: test
+  # variables:
+  #   KERNEL: "5.5"
