@@ -19,6 +19,7 @@ default:
 
 stages:
   - test
+  - build
 
 test:
   before_script:
@@ -32,3 +33,24 @@ test:
   stage: test
   # variables:
   #   KERNEL: "5.5"
+
+build:
+  artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+    paths:
+      - output/*
+    when: on_success
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends build-essential debhelper-compat device-tree-compiler devscripts git git-buildpackage gnupg2
+    # Unlock gpg keyring
+    - gpg --no-tty --batch --yes --import $SIGN_KEY
+    - echo "" | gpg2 --pinentry-mode loopback --passphrase $GPG_PASS --sign -u $GPG_USER > /dev/null
+  only:
+    - /^master/
+  script:
+    - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
+    - git fetch origin +refs/heads/upstream:refs/tags/upstream
+    - gbp buildpackage --git-upstream-tree=upstream --git-debian-branch="$CI_BUILD_REF_NAME" --git-builder='dpkg-buildpackage --post-clean -pgpg2 -i -I'
+    - mkdir output && cp -vf ../olinuxino-overlays_*.* ./output/
+  stage: build
