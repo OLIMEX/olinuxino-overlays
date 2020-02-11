@@ -34,7 +34,7 @@ test:
   # variables:
   #   KERNEL: "5.5"
 
-build:
+build:no-sign:
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
     paths:
@@ -52,7 +52,7 @@ build:
     - mkdir output && cp -vf ../olinuxino-overlays_*.* ./output/
   stage: build
 
-build with sign:
+build:sign:
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
     paths:
