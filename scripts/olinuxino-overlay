@@ -22,7 +22,7 @@ if [[ -z $compatible ]]; then
 	exit 0
 fi
 
-if [[ ! -d "/usr/lib/olimex-sunxi-overlays/$compatible" ]]; then
+if [[ ! -d "/usr/lib/olinuxino-overlays/$compatible" ]]; then
 	echo "The $compatible SoC family is not supported. Exiting."
 	exit 0
 fi
@@ -41,7 +41,7 @@ fi
 # Source available files
 OVERLAYS=()
 MENU=()
-for f in $(find "/usr/lib/olimex-sunxi-overlays/$compatible/" -type f -name "*.dtbo" | sort); do
+for f in $(find "/usr/lib/olinuxino-overlays/$compatible/" -type f -name "*.dtbo" | sort); do
 
 	# Check if overlay is compatible
 	[[ "$(fdtget $f / compatible)" != "allwinner,$compatible" ]] && continue
