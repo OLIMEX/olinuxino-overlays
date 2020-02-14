@@ -4,27 +4,40 @@ default:
 stages:
   - test
   - build
+  - deploy
 
 test:
   before_script:
     - apt-get update && apt-get install -y bats device-tree-compiler
+  only:
+    - /^upstream/
   script:
     - cd test && bash bootstrap.sh
   stage: test
 
 build:
   artifacts:
-    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+    name: "$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA"
     paths:
-      - $CI_JOB_NAME-$CI_COMMIT_REF_NAME/*
+      - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
     when: on_success
   before_script:
     - apt-get update
     - apt-get install -y --no-install-recommends build-essential debhelper-compat device-tree-compiler devscripts git git-buildpackage
+  except:
+    - /^upstream/
   script:
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
     - git fetch origin +refs/heads/upstream:refs/tags/upstream
     - gbp export-orig --upstream-tree=origin/upstream
+    - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
     - dpkg-buildpackage --post-clean --no-sign -i -I
-    - mkdir $CI_JOB_NAME-$CI_COMMIT_REF_NAME && cp -vf ../olinuxino-overlays_*.* ./$CI_JOB_NAME-$CI_COMMIT_REF_NAME/
+    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
   stage: build
+
+deploy:
+  script:
+    - reprepro -b /var/www/html/staging/ --ignore=wrongdistribution include buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
+  tags:
+    - deploy
+  when: manual
