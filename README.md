@@ -1,1 +1,0 @@
-# OLinuXino DTB overlays
