@@ -1,5 +1,5 @@
 default:
-  image: debian:sid
+  image: olimex/olinuxino-overlays
 
 stages:
   - test
@@ -7,8 +7,6 @@ stages:
   - deploy
 
 test:
-  before_script:
-    - apt-get update && apt-get install -y bats device-tree-compiler
   only:
     - /^upstream/
   script:
@@ -21,9 +19,6 @@ build:
     paths:
       - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
     when: on_success
-  before_script:
-    - apt-get update
-    - apt-get install -y --no-install-recommends build-essential debhelper-compat device-tree-compiler devscripts git git-buildpackage
   except:
     - /^upstream/
   script:
