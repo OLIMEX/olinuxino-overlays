@@ -1,34 +1,40 @@
 default:
-  image: debian:sid
-
-.build_kernel_dtbs: &build_kernel_dtbs
-  - apt-get update && apt-get install -y bison gcc flex lftp make wget xz-utils
-  - lftp -e "cls -1 > /tmp/kernel; exit" "http://cdn.kernel.org/pub/linux/kernel/v5.x/"
-  - FILE=$(grep ^linux-$KERNEL.*.tar.xz /tmp/kernel | sort -V | tail -n1)
-  - TARGET_DIR="$PWD/test/targets" && mkdir -p $TARGET_DIR/sun7i-a20 $TARGET_DIR/sun50i-a64
-  - pushd $(mktemp -d)
-  - wget https://cdn.kernel.org/pub/linux/kernel/v5.x/$FILE
-  - tar xf $FILE && cd "${FILE%.*.*}"
-  # Generate armhf dtbs
-  - make ARCH=arm defconfig && make ARCH=arm dtbs -j$(nproc)
-  - cp -vf arch/arm/boot/dts/sun7i-a20-oli*.dtb $TARGET_DIR/sun7i-a20/
-  # Generate arm64 dtbs
-  - make clean && make ARCH=arm64 defconfig && make ARCH=arm64 dtbs -j$(nproc)
-  - cp -vf arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino*.dtb $TARGET_DIR/sun50i-a64/
-  - popd
+  image: olimex/olinuxino-overlays
 
 stages:
   - test
+  - build
+  - deploy
 
 test:
-  before_script:
-    # Uncomment the following, to download and build latest dtbs
-    # - *build_kernel_dtbs
-    - apt-get update && apt-get install -y bats device-tree-compiler
   only:
-    - branches
+    - /^upstream/
   script:
     - cd test && bash bootstrap.sh
   stage: test
-  # variables:
-  #   KERNEL: "5.5"
+
+build:
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
+    when: on_success
+  except:
+    - /^upstream/
+  script:
+    - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
+    - git fetch origin +refs/heads/upstream:refs/tags/upstream
+    - gbp export-orig --upstream-tree=origin/upstream
+    - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
+    - dpkg-buildpackage --post-clean --no-sign -i -I
+    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
+  stage: build
+
+deploy:
+  script:
+    - reprepro -b /var/www/html/staging --ignore=wrongdistribution includedeb buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.deb
+    - reprepro -b /var/www/html/staging --ignore=wrongdistribution includedsc buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.dsc
+  stage: deploy
+  tags:
+    - deploy
+  when: manual
