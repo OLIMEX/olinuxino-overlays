@@ -67,7 +67,7 @@ done < results
 rm -f results
 
 # Finally enable/disable overlays
-LIST="overlays="
+LIST="fdtoverlays="
 
 # Get custom overlays
 for overlay in ${INSTALLED[@]}; do
@@ -85,8 +85,8 @@ for overlay in ${OVERLAYS[@]}; do
 done
 
 # Modify /boot/uEnv.txt
-if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^overlays=" "/boot/uEnv.txt"; then
+if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^fdtoverlays=" "/boot/uEnv.txt"; then
 	echo $LIST >> "/boot/uEnv.txt"
 else
-	sed -i "s/overlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
+	sed -i "s/fdtoverlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
 fi
