@@ -8,7 +8,6 @@
 	fragment@0 {
 		target = <&spi1>;
 		__overlay__ {
-			status = "okay";
 
 			spi-nor@0 {
 				compatible = "jedec,spi-nor";
