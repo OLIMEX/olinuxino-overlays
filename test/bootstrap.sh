@@ -35,15 +35,15 @@ for arch in sun7i-a20 sun50i-a64; do
 	for overlay in $(ls ../$arch/*.dts); do
 		cat >> $TEST << __EOF__
 
-@test "Compiling $(basename $overlay)" {
+@test "$arch: Compiling $(basename $overlay)" {
 	compile $overlay
 }
 
-@test "Check compatible for $(basename $overlay)" {
+@test "$arch: Check compatible for $(basename $overlay)" {
 	check_compatible $overlay $arch
 }
 
-@test "Check description for $(basename $overlay)" {
+@test "$arch: Check description for $(basename $overlay)" {
 	check_description $overlay
 }
 __EOF__
@@ -51,7 +51,7 @@ __EOF__
 		for target in $(ls targets/$arch/*.dtb); do
 			cat >> $TEST << __EOF__
 
-@test "Applying $(basename $overlay) to $(basename $target)" {
+@test "$arch: Applying $(basename $overlay) to $(basename $target)" {
 	apply $overlay $target
 }
 __EOF__
@@ -79,7 +79,7 @@ __EOF__
 			for target in $targets; do
 				cat >> $TEST << __EOF__
 
-@test "Applying $(basename $overlay) to $(basename $target)" {
+@test "$arch: Applying $(basename $overlay) to $(basename $target)" {
 	apply $overlay $target
 }
 __EOF__
