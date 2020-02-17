@@ -6,11 +6,28 @@ stages:
   - build
   - deploy
 
-test:
-  only:
-    - /^upstream/
+test:apply:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "upstream"'
+      when: always
+    - if: '$CI_BUILD_REF_NAME == "upstream"'
+      when: always
   script:
     - cd test && bash bootstrap.sh
+  stage: test
+
+test:package:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      when: always
+    - if: '$CI_BUILD_REF_NAME == "master"'
+      when: always
+  script:
+    - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
+    - git fetch origin +refs/heads/upstream:refs/tags/upstream
+    - gbp export-orig --upstream-tree=origin/upstream
+    - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
+    - dpkg-buildpackage --post-clean --no-sign -i -I
   stage: test
 
 build:
@@ -19,8 +36,9 @@ build:
     paths:
       - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
     when: on_success
-  except:
-    - /^upstream/
+  only:
+    - /^debian/
+    - /^master/
   script:
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
     - git fetch origin +refs/heads/upstream:refs/tags/upstream
@@ -30,10 +48,12 @@ build:
     - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
   stage: build
 
-deploy:
+deploy:staging:
+  only:
+    - /^debian/
   script:
-    - reprepro -b /var/www/html/staging --ignore=wrongdistribution includedeb buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.deb
-    - reprepro -b /var/www/html/staging --ignore=wrongdistribution includedsc buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.dsc
+    - reprepro -b /var/www/html/staging includedeb sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.deb
+    - reprepro -b /var/www/html/staging includedsc sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.dsc
   stage: deploy
   tags:
     - deploy
