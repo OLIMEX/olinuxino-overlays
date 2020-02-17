@@ -2,11 +2,11 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun50i-a64";
-	description = "Enable spidev on SPI1";
+	compatible = "allwinner,sun7i-a20";
+	description = "Enable spidev on SPI0";
 
 	fragment@0 {
-		target = <&spi1>;
+		target = <&spi0>;
 		__overlay__ {
 
 			spidev@0 {

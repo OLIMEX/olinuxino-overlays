@@ -2,11 +2,11 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun50i-a64";
-	description = "Enable SPI Flash on SPI1";
+	compatible = "allwinner,sun7i-a20";
+	description = "Enable SPI Flash on SPI2";
 
 	fragment@0 {
-		target = <&spi1>;
+		target = <&spi2>;
 		__overlay__ {
 
 			spi-nor@0 {

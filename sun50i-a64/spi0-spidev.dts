@@ -8,7 +8,6 @@
 	fragment@0 {
 		target = <&spi0>;
 		__overlay__ {
-			status = "okay";
 
 			spidev@0 {
 				compatible = "spidev";
