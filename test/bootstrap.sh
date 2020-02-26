@@ -30,7 +30,7 @@ check_compatible() {
 }
 __EOF__
 
-for arch in sun7i-a20 sun50i-a64; do
+for arch in sun7i-a20 sun5i-a13 sun50i-a64; do
 	# Add tests to the suite
 	for overlay in $(ls ../$arch/*.dts); do
 		cat >> $TEST << __EOF__

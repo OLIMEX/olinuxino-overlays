@@ -52,8 +52,8 @@ deploy:staging:
   only:
     - /^debian/
   script:
-    - reprepro -b /var/www/html/staging includedeb sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.deb
-    - reprepro -b /var/www/html/staging includedsc sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.dsc
+    - reprepro -b /var/www/html/staging includedeb unstable $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.deb
+    - reprepro -b /var/www/html/staging includedsc unstable $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.dsc
   stage: deploy
   tags:
     - deploy
