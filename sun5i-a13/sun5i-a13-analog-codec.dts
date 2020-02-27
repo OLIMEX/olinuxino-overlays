@@ -2,7 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun4i-a13";
+	compatible = "allwinner,sun5i-a13";
+	description = "Enable analog codec";
 
 	fragment@0 {
 		target = <&codec>;

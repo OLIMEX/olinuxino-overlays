@@ -3,6 +3,7 @@
 
 / {
 	compatible = "allwinner,sun5i-a13";
+	description = "Enable SPI1 bus";
 
 	fragment@0 {
 		target-path = "/aliases";
@@ -14,12 +15,12 @@
 	fragment@1 {
 		target = <&pio>;
 		__overlay__ {
-			spi1_pins_a: spi1@0 {
+			spi1_pg_pins: spi1-pg-pins {
 				pins = "PG10", "PG11", "PG12";
 				function = "spi1";
 			};
 
-			spi1_cs0_pins_a: spi1-cs0@0 {
+			spi1_cs0_pg_pin: spi1-cs0-pg-pin {
 				pins = "PG9";
 				function = "spi1";
 			};
@@ -29,11 +30,9 @@
 	fragment@2 {
 		target = <&spi1>;
 		__overlay__ {
-			status = "okay";
 			pinctrl-names = "default";
-			pinctrl-0 = <&spi1_pins_a>, <&spi1_cs0_pins_a>;
+			pinctrl-0 = <&spi1_pg_pins>, <&spi1_cs0_pg_pin>;
+			status = "okay";
 		};
 	};
-
-
 };

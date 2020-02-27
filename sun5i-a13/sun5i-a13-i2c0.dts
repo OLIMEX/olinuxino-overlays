@@ -3,17 +3,17 @@
 
 / {
 	compatible = "allwinner,sun5i-a13";
-	description = "Enable I2C1 bus";
+	description = "Enable I2C0 bus";
 
 	fragment@0 {
 		target-path = "/aliases";
 		__overlay__ {
-			i2c1 = "/soc@1c00000/i2c@1c2b000";
+			i2c0 = "/soc@1c00000/i2c@1c2ac00";
 		};
 	};
 
 	fragment@1 {
-		target = <&i2c1>;
+		target = <&i2c0>;
 		__overlay__ {
 			status = "okay";
 		};

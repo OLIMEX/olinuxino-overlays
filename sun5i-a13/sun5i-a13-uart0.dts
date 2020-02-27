@@ -3,6 +3,7 @@
 
 / {
 	compatible = "allwinner,sun5i-a13";
+	description = "Enable UART0 port";
 
 	fragment@0 {
 		target-path = "/aliases";
@@ -14,7 +15,7 @@
 	fragment@1 {
 		target = <&pio>;
 		__overlay__ {
-			uart0_pins_a: uart0@0 {
+			uart0_pf_pins: uart0-pf-pins {
 				pins = "PF2", "PF4";
 				function = "uart0";
 			};
@@ -25,7 +26,7 @@
 		target = <&uart0>;
 		 __overlay__ {
 			pinctrl-names = "default";
-			pinctrl-0 = <&uart0_pins_a>;
+			pinctrl-0 = <&uart0_pf_pins>;
 			status = "okay";
 		};
 	};

@@ -3,6 +3,7 @@
 
 / {
 	compatible = "allwinner,sun5i-a13";
+	description = "Enable UART3 port";
 
 	fragment@0 {
 		target-path = "/aliases";
@@ -15,7 +16,7 @@
 		target = <&uart3>;
 		 __overlay__ {
 			pinctrl-names = "default";
-			pinctrl-0 = <&uart3_pins_a>;
+			pinctrl-0 = <&uart3_pg_pins>;
 			status = "okay";
 		};
 	};
