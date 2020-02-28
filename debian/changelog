@@ -1,5 +1,7 @@
 olinuxino-overlays (1.0.0-1) unstable; urgency=medium
 
+  [ Olimex Dev team ]
   * Initial release. (Closes: #XXXXXX)
+  * Add overlays for sun5i-a13
 
  -- Olimex Dev team <support@olimex.com>  Mon, 10 Feb 2020 16:52:03 +0200
