@@ -4,6 +4,7 @@
 / {
 	compatible = "olimex,a20-olinuxino-lime2",
 		     "olimex,a20-olinuxino-lime2-emmc";
+	description = "Enable support for LIME2-SD";
 
 	fragment@0 {
 		target = <&pio>;

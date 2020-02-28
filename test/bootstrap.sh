@@ -26,11 +26,11 @@ check_description() {
 
 check_compatible() {
 	dtc -q -@ -I dts -O dtb -o $OVERLAY "$1"
-	[[ "$(fdtget $OVERLAY / compatible)" == "allwinner,$2" ]]
+	fdtget $OVERLAY / compatible | grep -w -q "$2"
 }
 __EOF__
 
-for arch in sun7i-a20 sun5i-a13 sun50i-a64; do
+for arch in sun5i-a13 sun7i-a20 sun50i-a64; do
 	# Add tests to the suite
 	for overlay in $(ls ../$arch/*.dts); do
 		cat >> $TEST << __EOF__
@@ -40,7 +40,7 @@ for arch in sun7i-a20 sun5i-a13 sun50i-a64; do
 }
 
 @test "$arch: Check compatible for $(basename $overlay)" {
-	check_compatible $overlay $arch
+	check_compatible $overlay "allwinner,$arch"
 }
 
 @test "$arch: Check description for $(basename $overlay)" {
@@ -62,10 +62,12 @@ __EOF__
 	for board in $(find ../$arch/* -type d -exec basename {} \;); do
 		case $board in
 		"A20-OLinuXino-Lime2")
+			compatible="olimex,a20-olinuxino-lime2"
 			targets=$(ls targets/$arch/sun7i-a20-olinuxino-lime2*.dtb)
 			;;
 
 		"A20-SOM204")
+			compatible="olimex,a20-olimex-som204-evb"
 			targets=$(ls targets/$arch/sun7i-a20-olimex-som204-evb*.dtb)
 			;;
 
@@ -75,7 +77,20 @@ __EOF__
 		esac
 
 		for overlay in $(ls ../$arch/$board/*.dts); do
+			cat >> $TEST << __EOF__
 
+@test "$arch: Compiling $(basename $overlay)" {
+compile $overlay
+}
+
+@test "$arch: Check compatible for $(basename $overlay)" {
+check_compatible $overlay $compatible
+}
+
+@test "$arch: Check description for $(basename $overlay)" {
+check_description $overlay
+}
+__EOF__
 			for target in $targets; do
 				cat >> $TEST << __EOF__
 
