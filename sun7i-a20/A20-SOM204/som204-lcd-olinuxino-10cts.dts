@@ -2,8 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "olimex,a20-olimex-som-evb",
-		     "olimex,a20-olimex-som-evb-emmc";
+	compatible = "olimex,a20-olimex-som204-evb",
+		     "olimex,a20-olimex-som204-evb-emmc";
 	description = "LCD-OLinuXino-10 with digital CTS touchscreen";
 
 	fragment@0 {
@@ -26,10 +26,10 @@
 				reg = <0x14>;
 
 				interrupt-parent = <&pio>;
-				interrupts = <7 12 2>;		/* PH12: IRQ_TYPE_EDGE_FALLING */
+				interrupts = <7 2 2>;		/* PH2: IRQ_TYPE_EDGE_FALLING */
 
-				irq-gpios = <&pio 7 12 0>;	/* PH12 */
-				reset-gpios = <&pio 1 13 0>;	/* PB13: GPIO_ACTIVE_HIGH */
+				irq-gpios = <&pio 7 2 0>;	/* PH2 */
+				reset-gpios = <&pio 8 1 0>;	/* PI1: GPIO_ACTIVE_HIGH */
 			};
 
 			panel@50 {
@@ -40,7 +40,7 @@
 				compatible = "olimex,lcd-olinuxino";
 				status = "okay";
 
-				enable-gpios = <&pio 7 7 0>;	/* PH7 */
+				enable-gpios = <&pio 2 24 0>;	/* PC24 */
 				backlight = <&backlight>;
 
 				port {
