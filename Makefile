@@ -52,7 +52,7 @@ all: $(DTBO)
 
 .PHONY: test
 test:
-	(cd test && ./bootstrap.sh)
+	(cd test && DTC=$(DTC) ./bootstrap.sh)
 
 .PHONY: clean
 clean:

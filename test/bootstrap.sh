@@ -1,6 +1,8 @@
 #!/bin/bash
 
+DTC=${DTC:-dtc}
 TEST=$(mktemp)
+echo "DTC version: $($DTC -v)"
 echo "Generating test script: $TEST"
 
 # Create base worker function
@@ -11,21 +13,21 @@ OVERLAY=$(mktemp)
 OUTPUT=$(mktemp)
 
 compile() {
-	dtc -q -@ -I dts -O dtb "$1"
+	${DTC} -q -@ -I dts -O dtb "$1"
 }
 
 apply() {
-	dtc -q -@ -I dts -O dtb -o $OVERLAY "$1"
+	${DTC} -q -@ -I dts -O dtb -o $OVERLAY "$1"
 	fdtoverlay -i "$2" -o $OUTPUT $OVERLAY
 }
 
 check_description() {
-	dtc -q -@ -I dts -O dtb -o $OVERLAY "$1"
+	${DTC} -q -@ -I dts -O dtb -o $OVERLAY "$1"
 	fdtget $OVERLAY / description
 }
 
 check_compatible() {
-	dtc -q -@ -I dts -O dtb -o $OVERLAY "$1"
+	${DTC} -q -@ -I dts -O dtb -o $OVERLAY "$1"
 	fdtget $OVERLAY / compatible | grep -w -q "$2"
 }
 __EOF__
