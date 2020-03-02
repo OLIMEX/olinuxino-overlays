@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DTC=${DTC:-dtc}
+export DTC=${DTC:-dtc}
 TEST=$(mktemp)
-echo "DTC version: $($DTC -v)"
+echo "DTC version: $(${DTC} -v)"
 echo "Generating test script: $TEST"
 
 # Create base worker function
@@ -63,6 +63,11 @@ __EOF__
 	# Add board specific tests
 	for board in $(find ../$arch/* -type d -exec basename {} \;); do
 		case $board in
+		"A20-OLinuXino-Lime")
+			compatible="olimex,a20-olinuxino-lime"
+			targets=$(ls targets/$arch/sun7i-a20-olinuxino-lime*.dtb)
+			;;
+
 		"A20-OLinuXino-Lime2")
 			compatible="olimex,a20-olinuxino-lime2"
 			targets=$(ls targets/$arch/sun7i-a20-olinuxino-lime2*.dtb)
