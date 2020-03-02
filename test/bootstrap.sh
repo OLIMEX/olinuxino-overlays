@@ -73,6 +73,11 @@ __EOF__
 			targets=$(ls targets/$arch/sun7i-a20-olinuxino-lime2*.dtb)
 			;;
 
+		"A20-OLinuXino-Micro")
+			compatible="olimex,a20-olinuxino-micro"
+			targets=$(ls targets/$arch/sun7i-a20-olinuxino-micro*.dtb)
+			;;
+
 		"A20-SOM204")
 			compatible="olimex,a20-olimex-som204-evb"
 			targets=$(ls targets/$arch/sun7i-a20-olimex-som204-evb*.dtb)
