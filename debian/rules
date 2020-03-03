@@ -20,3 +20,5 @@ override_dh_auto_install:
 	# Install scripts
 	mkdir -p debian/olinuxino-overlays/usr/sbin/
 	install -m 755 scripts/* debian/olinuxino-overlays/usr/sbin/
+
+override_dh_auto_test:
