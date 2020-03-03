@@ -3,7 +3,9 @@ default:
 
 stages:
   - test
-  - build
+  - source
+  - binary
+  - merge
   - deploy
 
 test:apply:
@@ -13,48 +15,63 @@ test:apply:
     - if: '$CI_BUILD_REF_NAME == "upstream"'
       when: always
   script:
-    - cd test && bash bootstrap.sh
+    - make test
   stage: test
 
-test:package:
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
-    - if: '$CI_BUILD_REF_NAME == "master"'
-      when: always
-  script:
-    - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
-    - git fetch origin +refs/heads/upstream:refs/tags/upstream
-    - gbp export-orig --upstream-tree=origin/upstream
-    - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
-    - dpkg-buildpackage --post-clean --no-sign -i -I
-  stage: test
-
-build:
+package:source:
   artifacts:
     name: "$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA"
     paths:
       - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
     when: on_success
+  before_script:
+    - rm -vf ../olinuxino-overlays*.* || true
+    - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
+    - git fetch origin +refs/heads/upstream:refs/tags/upstream
+    - gbp export-orig --upstream-tree=origin/upstream
   only:
     - /^debian/
     - /^master/
   script:
+    - dpkg-buildpackage --post-clean -S -i -I
+    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
+  stage: source
+
+package:binary:
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
+    when: on_success
+  before_script:
+    - rm -vf ../olinuxino-overlays*.* || true
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
     - git fetch origin +refs/heads/upstream:refs/tags/upstream
     - gbp export-orig --upstream-tree=origin/upstream
-    - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
-    - dpkg-buildpackage --post-clean --no-sign -i -I
-    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
-  stage: build
-
-deploy:staging:
   only:
     - /^debian/
+    - /^master/
   script:
-    - reprepro -b /var/www/html/staging includedeb sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.deb
-    - reprepro -b /var/www/html/staging includedsc sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.dsc
+    - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
+    - dpkg-buildpackage --post-clean --no-sign -i -I
+    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
+  stage: binary
+
+package:merge:
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
+  script:
+    - mergechanges -f $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
+  stage: merge
+
+deploy:staging:
+  rules:
+    - if: '$CI_COMMIT_REF_PROTECTED == "true"'
+      when: manual
+  script:
+    - reprepro -b /var/www/html/staging include unstable $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
   stage: deploy
   tags:
     - deploy
-  when: manual
