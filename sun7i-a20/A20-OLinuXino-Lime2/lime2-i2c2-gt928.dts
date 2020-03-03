@@ -9,7 +9,7 @@
 	fragment0 {
 		target = <&i2c2>;
 		__overlay__ {
-			gt911@14 {
+			gt928@14 {
 				compatible = "goodix,gt928";
 				reg = <0x14>;
 
