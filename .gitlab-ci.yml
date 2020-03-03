@@ -25,7 +25,7 @@ package:source:
       - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
     when: on_success
   before_script:
-    - rm -vf ../olinuxino-overlays*.* || true
+    - rm -vf ../olinuxino-overlays_*.* || true
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
     - git fetch origin +refs/heads/upstream:refs/tags/upstream
     - gbp export-orig --upstream-tree=origin/upstream
@@ -34,7 +34,7 @@ package:source:
     - /^master/
   script:
     - dpkg-buildpackage --post-clean -S -i -I
-    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
+    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
   stage: source
 
 package:binary:
@@ -44,7 +44,7 @@ package:binary:
       - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
     when: on_success
   before_script:
-    - rm -vf ../olinuxino-overlays*.* || true
+    - rm -vf ../olinuxino-overlays_*.* || true
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
     - git fetch origin +refs/heads/upstream:refs/tags/upstream
     - gbp export-orig --upstream-tree=origin/upstream
@@ -54,7 +54,7 @@ package:binary:
   script:
     - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
     - dpkg-buildpackage --post-clean --no-sign -i -I
-    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
+    - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* ./$CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
   stage: binary
 
 package:merge:
