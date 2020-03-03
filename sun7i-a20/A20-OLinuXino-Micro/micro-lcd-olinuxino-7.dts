@@ -2,8 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "olimex,a20-olinuxino-lime2",
-		     "olimex,a20-olinuxino-lime2-emmc";
+	compatible = "olimex,a20-olinuxino-micro",
+		     "olimex,a20-olinuxino-micro-emmc";
 	description = "LCD-OLinuXino-7";
 
 	fragment@0 {

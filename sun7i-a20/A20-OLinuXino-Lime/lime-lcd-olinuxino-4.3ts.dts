@@ -2,9 +2,9 @@
 /plugin/;
 
 / {
-	compatible = "olimex,a20-olinuxino-lime2",
-		     "olimex,a20-olinuxino-lime2-emmc";
-	description = "LCD-OLinuXino-7";
+	compatible = "olimex,a20-olinuxino-lime",
+		     "olimex,a20-olinuxino-lime-emmc";
+	description = "LCD-OLinuXino-4.3 with analog RTP touchscreen";
 
 	fragment@0 {
 		target-path = "/";
@@ -20,7 +20,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&lcd_rgb888_pins>;
 
-				compatible = "olimex,lcd-olinuxino-7";
+				compatible = "olimex,lcd-olinuxino-4.3";
 				status = "okay";
 
 				enable-gpios = <&pio 7 8 0>;
@@ -66,6 +66,14 @@
 				reg = <0>;
 				remote-endpoint = <&panel_in_tcon0>;
 			};
+		};
+	};
+
+	fragment@4 {
+		target = <&rtp>;
+		__overlay__ {
+			allwinner,ts-attached;
+			touchscreen-inverted-x;
 		};
 	};
 };

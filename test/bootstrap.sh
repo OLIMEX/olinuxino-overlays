@@ -1,6 +1,8 @@
 #!/bin/bash
 
+export DTC=${DTC:-dtc}
 TEST=$(mktemp)
+echo "DTC version: $(${DTC} -v)"
 echo "Generating test script: $TEST"
 
 # Create base worker function
@@ -11,21 +13,21 @@ OVERLAY=$(mktemp)
 OUTPUT=$(mktemp)
 
 compile() {
-	dtc -q -@ -I dts -O dtb "$1"
+	${DTC} -q -@ -I dts -O dtb "$1"
 }
 
 apply() {
-	dtc -q -@ -I dts -O dtb -o $OVERLAY "$1"
+	${DTC} -q -@ -I dts -O dtb -o $OVERLAY "$1"
 	fdtoverlay -i "$2" -o $OUTPUT $OVERLAY
 }
 
 check_description() {
-	dtc -q -@ -I dts -O dtb -o $OVERLAY "$1"
+	${DTC} -q -@ -I dts -O dtb -o $OVERLAY "$1"
 	fdtget $OVERLAY / description
 }
 
 check_compatible() {
-	dtc -q -@ -I dts -O dtb -o $OVERLAY "$1"
+	${DTC} -q -@ -I dts -O dtb -o $OVERLAY "$1"
 	fdtget $OVERLAY / compatible | grep -w -q "$2"
 }
 __EOF__
@@ -61,9 +63,24 @@ __EOF__
 	# Add board specific tests
 	for board in $(find ../$arch/* -type d -exec basename {} \;); do
 		case $board in
+		"A20-OLinuXino-Lime")
+			compatible="olimex,a20-olinuxino-lime"
+			targets=$(ls targets/$arch/sun7i-a20-olinuxino-lime*.dtb)
+			;;
+
 		"A20-OLinuXino-Lime2")
 			compatible="olimex,a20-olinuxino-lime2"
 			targets=$(ls targets/$arch/sun7i-a20-olinuxino-lime2*.dtb)
+			;;
+
+		"A20-OLinuXino-Micro")
+			compatible="olimex,a20-olinuxino-micro"
+			targets=$(ls targets/$arch/sun7i-a20-olinuxino-micro*.dtb)
+			;;
+
+		"A20-SOM")
+			compatible="olimex,a20-olimex-som-evb"
+			targets=$(ls targets/$arch/sun7i-a20-olimex-som-evb*.dtb)
 			;;
 
 		"A20-SOM204")
