@@ -60,15 +60,16 @@ for f in $(find "/usr/lib/olinuxino-overlays/${soc}/" -type f -name "*.dtbo" | s
 	fi
 done
 
+RESULT=$(mktemp)
 whiptail --title "Enable FDT overlays" --checklist --separate-output \
-"Available overlays:" $Y $X $(( $Y - 8 )) "${MENU[@]}" 2>results
+"Available overlays:" $Y $X $(( $Y - 8 )) "${MENU[@]}" 2>${RESULT}
 
 # Get enabled overlays
 ENABLED=()
 while read line; do
 	ENABLED+=("$line")
-done < results
-rm -f results
+done < ${RESULT}
+rm -f ${RESULT}
 
 # Finally enable/disable overlays
 LIST="fdtoverlays="
