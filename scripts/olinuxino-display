@@ -42,7 +42,7 @@ Board must be rebooted to apply changes." 7 70
 
 function display_error_dialog()
 {
-	dialog --title "$1" --backtitle "${BACKTITLE}" --msgbox "\n$2" 0 0
+	dialog --title "$1" --backtitle "${BACKTITLE}" --msgbox "\n$2" 7 70
 	exit 1
 }
 
@@ -78,6 +78,7 @@ choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 for choice in $choices; do
 	case ${choice} in
 	"LCD-OLinuXino")
+		id=""
 		overlay="lcd-olinuxino"
 		;;
 	"LCD-OLinuXino-4.3TS")
@@ -117,12 +118,74 @@ for choice in $choices; do
 	esac
 done
 
-echo $id
-for f in find
-echo $overlay
-exit 0
+# Find target overlay
+for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
+	# Check if overlay is compatible
+	compatible="$(fdtget $f / compatible)"
+	grep -q -w "${board}" <<< ${compatible} && \
+		target_overlay=${f}
 
-[[ ${id} -eq 0 ]] && unset id
+done
+
+[[ -z ${target_overlay} ]] && \
+	display_error_dialog "Missing overlay" "There is no board overlay supporting this LCD panel!"
+
+# Get currently installed overlays
+INSTALLED=""
+if [[ -e "/boot/uEnv.txt" ]]; then
+	while read line; do
+		if [[ "$line" == "fdtoverlays="* ]]; then
+			INSTALLED="$(cut -d '=' -f2 <<< "$line")"
+			break
+		fi
+	done <<< "$(cat "/boot/uEnv.txt")"
+fi
+
+LIST="fdtoverlays="
+for overlay in ${INSTALLED[@]}; do
+	[[ "${overlay}" != *"-lcd-olinuxino"* ]] && \
+		LIST="${LIST}${overlay} "
+done
+LIST="${LIST}${target_overlay}"
+
+# Modify /boot/uEnv.txt
+if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^fdtoverlays=" "/boot/uEnv.txt"; then
+	echo ${LIST} >> "/boot/uEnv.txt"
+else
+	sed -i "s/fdtoverlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
+fi
+
+# Set uboot- environment
 fw_setenv lcd_olinuxino ${id}
-fw_printenv lcd_olinuxino
-#display_reboot_dialog
+
+if [[ -z ${id} ]]; then
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+
+	done
+
+	if [[ ! -z ${target_overlay} ]]; then
+		fw_setenv lcd_olinuxino_9278 ${target_overlay}
+	fi
+
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+
+	done
+
+	if [[ ! -z ${target_overlay} ]]; then
+		fw_setenv lcd_olinuxino_9284 ${target_overlay}
+	fi
+fi
+
+display_reboot_dialog
