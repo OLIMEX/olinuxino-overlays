@@ -1,0 +1,26 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,a20-olinuxino-lime2",
+		     "olimex,a20-olinuxino-lime2-emmc";
+	description = "Goodix GT911 CTS controller on I2C2 bus";
+
+	fragment0 {
+		target = <&i2c2>;
+		__overlay__ {
+			gt911@14 {
+				compatible = "goodix,gt911";
+				reg = <0x14>;
+
+				interrupt-parent = <&pio>;
+				interrupts = <7 10 2>;		/* PH10: IRQ_TYPE_EDGE_FALLING */
+
+				irq-gpios = <&pio 7 10 0>;	/* PH10 */
+				reset-gpios = <&pio 7 11 0>;	/* PH11: GPIO_ACTIVE_HIGH */
+
+				touchscreen-swapped-x-y;
+			};
+		};
+	};
+};

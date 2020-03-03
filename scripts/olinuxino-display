@@ -1,0 +1,128 @@
+#!/bin/bash
+UBOOT_ENV="/uboot.env"
+FW_SETENV="fw_setenv"
+BACKTITLE="OLinuXino display configurator"
+
+# Set default resolution
+X=80
+Y=20
+
+if which resize > /dev/null; then
+	eval $(resize)
+	X=$COLUMNS
+	Y=$LINES
+fi
+
+# Detect family
+for comp in $(cat "/proc/device-tree/compatible" | tr '\0' '\n'); do
+	if [[ "$comp" == "allwinner,sun"* ]]; then
+		soc=$(cut -d',' -f2 <<< $comp)
+	elif [[ "$comp" == "olimex,"* ]]; then
+		board="${comp}"
+	fi
+done
+
+if [[ -z ${soc} ]]; then
+	echo "The board is not Allwinner SoC. Exiting."
+	exit 0
+fi
+
+if [[ ! -d "/usr/lib/olinuxino-overlays/${soc}" ]]; then
+	echo "The ${soc} SoC family is not supported. Exiting."
+	exit 0
+fi
+
+function display_reboot_dialog()
+{
+	dialog --title "Almost done" --backtitle "${BACKTITLE}" --yes-label "Reboot" --no-label "Exit" --yesno "\nAll done. \n
+Board must be rebooted to apply changes." 7 70
+	[[ $? -ne 0 ]] && exit 0
+	reboot
+}
+
+function display_error_dialog()
+{
+	dialog --title "$1" --backtitle "${BACKTITLE}" --msgbox "\n$2" 0 0
+	exit 1
+}
+
+# Check tools
+! ${FW_SETENV} -v 2>/dev/null && \
+	echo "${FW_SETENV}: not found!" && \
+	exit 1
+
+# Check if /uboot.env exist
+[[ ! -e ${UBOOT_ENV} ]] && \
+	echo "${UBOOT_ENV} is missing.
+	* Copy /usr/lib/u-boot-olinuxino to ${UBOOT_ENV}
+	* Run: saveenv inside u-boot shell" && \
+	exit 1
+
+
+options=(
+	"LCD-OLinuXino"		"Auto detection"
+	"LCD-OLinuXino-4.3TS"	"480x272 panel with RTS"
+	"LCD-OLinuXino-5"	"800x480 panel with CTS"
+	"LCD-OLinuXino-7"	"800x480 panel"
+	"LCD-OLinuXino-7TS"	"800x480 panel with RTS"
+	"LCD-OLinuXino-7CTS"	"1024x600 panel with CTS"
+	"LCD-OLinuXino-10"	"1024x600"
+	"LCD-OLinuXino-10TS"	"1024x600 with RTS"
+	"LCD-OLinuXino-10CTS"	"1024x600 with CTS"
+	)
+
+cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 17 70 16)
+choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+[[ $? -ne 0 ]] && exit 1
+
+for choice in $choices; do
+	case ${choice} in
+	"LCD-OLinuXino")
+		overlay="lcd-olinuxino"
+		;;
+	"LCD-OLinuXino-4.3TS")
+		overlay="lcd-olinuxino-4.3"
+		id=7859
+		;;
+	"LCD-OLinuXino-5")
+		overlay="lcd-olinuxino-5"
+		id=8630
+		;;
+	"LCD-OLinuXino-7")
+		overlay="lcd-olinuxino-7"
+		id=7864
+		;;
+	"LCD-OLinuXino-7TS")
+		overlay="lcd-olinuxino-7ts"
+		id=7864
+		;;
+	"LCD-OLinuXino-7CTS")
+		overlay="lcd-olinuxino-7cts"
+		id=9278
+		;;
+	"LCD-OLinuXino-10")
+		overlay="lcd-olinuxino-10"
+		id=7862
+		;;
+	"LCD-OLinuXino-10TS")
+		overlay="lcd-olinuxino-10ts"
+		id=7862
+		;;
+	"LCD-OLinuXino-10CTS")
+		overlay="lcd-olinuxino-10cts"
+		id=9284
+		;;
+	*)
+		;;
+	esac
+done
+
+echo $id
+for f in find
+echo $overlay
+exit 0
+
+[[ ${id} -eq 0 ]] && unset id
+fw_setenv lcd_olinuxino ${id}
+fw_printenv lcd_olinuxino
+#display_reboot_dialog
