@@ -71,7 +71,14 @@ options=(
 	"LCD-OLinuXino-10CTS"	"1024x600 with CTS"
 	)
 
-cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 17 70 16)
+# LVDS panel are only supported on A20 based boards
+[[ ${soc} == "sun7i-a20" ]] && \
+	options+=(
+		"LCD-OLinuXino-15.6"	"1366x768 LVDS panel"
+		"LCD-OLinuXino-15.6FHD"	"1920x1080 LVDS panel"
+	)
+
+cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 19 70 18)
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 [[ $? -ne 0 ]] && exit 1
 
@@ -112,6 +119,14 @@ for choice in $choices; do
 	"LCD-OLinuXino-10CTS")
 		overlay="lcd-olinuxino-10cts"
 		id=9284
+		;;
+	"LCD-OLinuXino-15.6")
+		overlay="lcd-olinuxino-15.6"
+		id=7891
+		;;
+	"LCD-OLinuXino-15.6FHD")
+		overlay="lcd-olinuxino-15.6fhd"
+		id=7894
 		;;
 	*)
 		;;
