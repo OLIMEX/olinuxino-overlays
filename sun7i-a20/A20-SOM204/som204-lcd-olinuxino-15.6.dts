@@ -3,7 +3,7 @@
 
 / {
 	compatible = "olimex,a20-olimex-som204-evb",
-		     "olimex,a20-olimex-som204-evb";
+		     "olimex,a20-olimex-som204-evb-emmc";
 	description = "LCD-OLinuXino-15.6 LVDS panel";
 
 	fragment@0 {
