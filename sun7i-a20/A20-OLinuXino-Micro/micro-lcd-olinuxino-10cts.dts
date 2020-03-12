@@ -15,29 +15,12 @@
 				brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
 				default-brightness-level = <10>;
 			};
-		};
-	};
 
-	fragment1 {
-		target = <&i2c2>;
-		__overlay__ {
-			gt928@14 {
-				compatible = "goodix,gt928";
-				reg = <0x14>;
-
-				interrupt-parent = <&pio>;
-				interrupts = <7 12 2>;		/* PH12: IRQ_TYPE_EDGE_FALLING */
-
-				irq-gpios = <&pio 7 12 0>;	/* PH12 */
-				reset-gpios = <&pio 1 13 0>;	/* PB13: GPIO_ACTIVE_HIGH */
-			};
-
-			panel@50 {
+			panel {
 				pinctrl-names = "default";
 				pinctrl-0 = <&lcd_rgb888_pins>;
-				reg = <0x50>;
 
-				compatible = "olimex,lcd-olinuxino";
+				compatible = "olimex,lcd-olinuxino-10";
 				status = "okay";
 
 				enable-gpios = <&pio 7 8 0>;
@@ -52,7 +35,7 @@
 		};
 	};
 
-	fragment@2 {
+	fragment@1 {
 		target = <&pwm>;
 		__overlay__ {
 			pinctrl-names = "default";
@@ -61,7 +44,7 @@
 		};
 	};
 
-	fragment@3 {
+	fragment@2 {
 		target = <&pio>;
 		__overlay__ {
 			lcd_rgb888_pins: lcd-rgb888-pins {
@@ -76,7 +59,7 @@
 		};
 	};
 
-	fragment@4 {
+	fragment@3 {
 		target = <&tcon0_out>;
 		__overlay__ {
 			tcon0_out_panel: endpoint@0 {

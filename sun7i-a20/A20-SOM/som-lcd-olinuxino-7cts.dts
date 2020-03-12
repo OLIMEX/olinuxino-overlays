@@ -2,8 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "olimex,a20-olinuxino-lime2",
-		     "olimex,a20-olinuxino-lime2-emmc";
+	compatible = "olimex,a20-olimex-som-evb",
+		     "olimex,a20-olimex-som-evb-emmc";
 	description = "LCD-OLinuXino-7 with digital CTS touchscreen";
 
 	fragment@0 {
@@ -23,7 +23,7 @@
 				compatible = "olimex,lcd-olinuxino-10"; /* This is NOT a mistake */
 				status = "okay";
 
-				enable-gpios = <&pio 7 8 0>;
+				enable-gpios = <&pio 7 7 0>;	/* PH7 */
 				backlight = <&backlight>;
 
 				port {
