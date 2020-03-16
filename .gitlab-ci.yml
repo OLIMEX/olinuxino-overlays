@@ -28,11 +28,13 @@ package:source:
     - rm -vf ../olinuxino-overlays_*.* || true
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
     - git fetch origin +refs/heads/upstream:refs/tags/upstream
+    - sed -i "s/BUILD_DATE/$(date +%Y%m%d.%H%M%S)/g" debian/changelog
     - gbp export-orig --upstream-tree=origin/upstream
   script:
     - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
     - dpkg-buildpackage --post-clean -S -i -I
     - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
+    - cp -v debian/changelog $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
   stage: source
 
 package:binary:
@@ -43,6 +45,7 @@ package:binary:
     when: on_success
   before_script:
     - cp -v $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/* ../
+    - cp -v $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/changelog debian/changelog
     - rm -rvf $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA
   script:
     - tar -xvf ../olinuxino-overlays*.orig.tar.gz --skip-old-files --strip 1 -C ./
@@ -60,11 +63,22 @@ package:merge:
   stage: merge
 
 deploy:staging:
-  rules:
-    - if: '$CI_COMMIT_REF_PROTECTED == "true"'
-      when: manual
   script:
-    - reprepro -b /var/www/html/staging include unstable $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include bionic $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include focal $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
   stage: deploy
   tags:
     - deploy
+
+deploy:repository:
+  script:
+    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include bionic $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include focal $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*_multi.changes
+  stage: deploy
+  tags:
+    - deploy
+  when: manual
