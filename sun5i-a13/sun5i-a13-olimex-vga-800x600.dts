@@ -3,6 +3,8 @@
 
 / {
 compatible = "allwinner,sun5i-a13";
+description = "Enable VGA with 800x600 resolution";
+
 fragment@0 {
  target-path = "/panel"; /* or target-path */
 	 __overlay__ {

@@ -3,6 +3,8 @@
 
 / {
 compatible = "allwinner,sun5i-a13";
+description = "Enable 7inch LCD";
+
 fragment@0 {
  target-path = "/panel"; /* or target-path */
 	 __overlay__ {
