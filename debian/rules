@@ -12,7 +12,7 @@ include /usr/share/dpkg/default.mk
 
 override_dh_auto_install:
 	# Install overlays
-	for soc in sun7i-a20 sun50i-a64; do \
+	for soc in sun7i-a20 sun5i-a13 sun50i-a64; do \
 		mkdir -p debian/olinuxino-overlays/usr/lib/olinuxino-overlays/$${soc} ; \
 		find $${soc}/ -name "*.dtbo" -exec cp -f {} debian/olinuxino-overlays/usr/lib/olinuxino-overlays/$${soc}/ \; ; \
 	done
