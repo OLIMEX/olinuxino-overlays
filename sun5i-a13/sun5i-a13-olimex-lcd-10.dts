@@ -1,0 +1,13 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+compatible = "allwinner,sun5i-a13";
+fragment@0 {
+ target-path = "/panel"; /* or target-path */
+	 __overlay__ {
+		compatible = "olimex,lcd-olinuxino-10";
+	};
+ }; 
+
+};
