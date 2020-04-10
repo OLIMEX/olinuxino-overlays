@@ -3,7 +3,7 @@
 
 / {
 compatible = "allwinner,sun5i-a13";
-description = "Enable 4.3inch LCD";
+description = "LCD-OLinuXino-4.3TS 480x272 panel w/wo resistive TS and analog interface";
 
 fragment@0 {
  target-path = "/panel"; /* or target-path */

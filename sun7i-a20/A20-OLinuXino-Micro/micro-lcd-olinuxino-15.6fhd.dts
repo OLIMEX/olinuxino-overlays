@@ -4,7 +4,7 @@
 / {
 	compatible = "olimex,a20-olinuxino-micro",
 		     "olimex,a20-olinuxino-micro-emmc";
-	description = "LCD-OLinuXino-15.6FHD LVDS panel";
+	description = "LCD-OLinuXino-15.6FHD 1920x1080 LVDS panel without TS";
 
 	fragment@0 {
 		target-path = "/";

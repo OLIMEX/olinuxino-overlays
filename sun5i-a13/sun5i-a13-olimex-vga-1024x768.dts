@@ -3,7 +3,7 @@
 
 / {
 compatible = "allwinner,sun5i-a13";
-description = "Enable VGA with 1024x768 resolution";
+description = "Enable VGA  with 1024x768 resolution";
 
 fragment@0 {
  target-path = "/panel"; /* or target-path */

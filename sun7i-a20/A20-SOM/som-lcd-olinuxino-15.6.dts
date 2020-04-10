@@ -4,7 +4,7 @@
 / {
 	compatible = "olimex,a20-olimex-som-evb",
 		     "olimex,a20-olimex-som-evb-emmc";
-	description = "LCD-OLinuXino-15.6 LVDS panel";
+	description = "LCD-OLinuXino-15.6 1366x768 LVDS panel without TS";
 
 	fragment@0 {
 		target-path = "/";

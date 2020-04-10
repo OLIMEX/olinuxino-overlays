@@ -4,7 +4,7 @@
 / {
 	compatible = "olimex,a20-olinuxino-micro",
 		     "olimex,a20-olinuxino-micro-emmc";
-	description = "LCD-OLinuXino-4.3 with analog RTP touchscreen";
+	description = "LCD-OLinuXino-4.3TS 480x272 panel with resistive TS and analog interface";
 
 	fragment@0 {
 		target-path = "/";

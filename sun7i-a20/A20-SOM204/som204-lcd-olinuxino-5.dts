@@ -4,7 +4,7 @@
 / {
 	compatible = "olimex,a20-olimex-som204-evb",
 		     "olimex,a20-olimex-som204-evb-emmc";
-	description = "LCD-OLinuXino-5 with digital CTS touchscreen";
+	description = "LCD-OLinuXino-5CTS 800x480 panel with capacitive TS and I2C interface";
 
 	fragment@0 {
 		target-path = "/";
