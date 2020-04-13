@@ -64,6 +64,12 @@ RESULT=$(mktemp)
 whiptail --title "Enable FDT overlays" --checklist --separate-output \
 "Available overlays:" $Y $X $(( $Y - 8 )) "${MENU[@]}" 2>${RESULT}
 
+# meh. do not touch uEnv.txt on cancel..
+exitstatus=$?
+if [ "$exitstatus" != "0" ]; then
+  exit 0
+fi
+
 # Get enabled overlays
 ENABLED=()
 while read line; do
