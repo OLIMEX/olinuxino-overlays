@@ -159,9 +159,39 @@ fi
 LIST="fdtoverlays="
 for overlay in ${INSTALLED[@]}; do
 	[[ "${overlay}" != *"-lcd-olinuxino"* ]] && \
+	[[ "${overlay}" != *"i2c2-gt928"* ]] && \
+	[[ "${overlay}" != *"i2c2-gt911"* ]] && \
 		LIST="${LIST}${overlay} "
 done
 LIST="${LIST}${target_overlay}"
+
+if [[ "${id}" == "9278" ]]; then
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+	done
+	if [[ ! -z ${target_overlay} ]]; then
+		LIST="${LIST} ${target_overlay}"
+	fi
+fi
+
+if [[ "${id}" == "9284" ]]; then
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+	done
+	if [[ ! -z ${target_overlay} ]]; then
+		LIST="${LIST} ${target_overlay}"
+	fi
+fi
 
 # Modify /boot/uEnv.txt
 if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^fdtoverlays=" "/boot/uEnv.txt"; then
@@ -170,6 +200,7 @@ else
 	sed -i "s/fdtoverlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
 fi
 
+# TODO this is broken
 # Set uboot- environment
 fw_setenv lcd_olinuxino ${id}
 
