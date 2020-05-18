@@ -2,8 +2,9 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun50i-a64";
-	description = "Enable SPI Flash on SPI1";
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "Enable SPI Flash on SPI1!! Multiplexed with LCD D2-D5";
 
 	fragment@0 {
 		target = <&spi1>;

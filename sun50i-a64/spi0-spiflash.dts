@@ -2,7 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun50i-a64";
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
 	description = "Enable built-in W25Q128 SPI Flash on SPI0";
 
 	fragment@0 {

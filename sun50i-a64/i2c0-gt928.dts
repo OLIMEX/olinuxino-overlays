@@ -1,0 +1,24 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+                     "olimex,a64-olinuxino";
+	description = "Goodix GT928 CTS controller on I2C2 bus";
+
+	fragment0 {
+		target = <&i2c0>;
+		__overlay__ {
+			gt928@14 {
+				compatible = "goodix,gt928";
+				reg = <0x14>;
+
+				interrupt-parent = <&pio>;
+				interrupts = <7 7 2>;		/* PH7: IRQ_TYPE_EDGE_FALLING */
+
+				irq-gpios = <&pio 7 7 0>;	/* PH7 */
+				reset-gpios = <&pio 7 8 0>;	/* PH8: GPIO_ACTIVE_HIGH */
+			};
+		};
+	};
+};

@@ -2,7 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun50i-a64";
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
 	description = "Enable TWI1 bus";
 
 	fragment@0 {

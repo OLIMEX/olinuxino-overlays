@@ -2,8 +2,9 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun50i-a64";
-	description = "Enable LCD-OLinuXino-5";
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "LCD-OLinuXino-5CTS 800x480 panel with capacitive TS and I2C interface";
 
 	fragment@0 {
 		target-path = "/";

@@ -2,8 +2,9 @@
 /plugin/;
 
 / {
-	compatible = "allwinner,sun50i-a64";
-	description = "Enable LCD-OLinuXino-7";
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "LCD-OLinuXino-7 800x480 panel without TS";
 
 	fragment@0 {
 		target-path = "/";
@@ -19,8 +20,9 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&lcd_rgb666_pins>;
 
-				compatible = "olimex,lcd-olinuxino-7";
-				status = "okay";
+				compatible = "olimex,lcd-olinuxino-10"; /* This is NOT a mistake */
+                                status = "okay";
+
 
 				enable-gpios = <&pio 3 23 0>;
 				backlight = <&backlight>;
