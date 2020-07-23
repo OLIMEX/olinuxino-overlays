@@ -16,7 +16,6 @@
 				reg = <0x4d>;
 				interrupt-parent = <&pio>;
                                 interrupts = <7 12 4>;          /* PH12: IRQ_TYPE_EDGE_FALLING */
-				touchscreen-inverted-y;
 			};
 		};
 	};
