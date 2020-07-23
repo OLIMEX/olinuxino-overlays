@@ -15,7 +15,7 @@
 				compatible = "microchip,ar1021-i2c";
 				reg = <0x4d>;
 				interrupt-parent = <&pio>;
-                                interrupts = <7 12 2>;          /* PH12: IRQ_TYPE_EDGE_FALLING */
+                                interrupts = <7 12 4>;          /* PH12: IRQ_TYPE_EDGE_FALLING */
 				touchscreen-inverted-y;
 			};
 		};
