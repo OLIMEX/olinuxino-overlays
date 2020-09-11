@@ -83,7 +83,9 @@ options=(
 		"LCD-OLinuXino"		"Auto detection"
 		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-7"	"800x480 panel withouth TS"
+		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-10"	"1024x600 panel without TS"
+		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
 	)
 
 cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 19 70 18)
