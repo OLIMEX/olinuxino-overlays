@@ -20,7 +20,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&lcd_rgb666_pins>;
 
-				compatible = "olimex,lcd-olinuxino-10"; /* This is NOT a mistake */
+				compatible = "olimex,lcd-olinuxino-7";
                                 status = "okay";
 
 
