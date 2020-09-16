@@ -72,4 +72,24 @@
 			status = "disabled";
 		};
 	};
+	
+	fragment@5 {
+                target = <&i2c0>;
+                __overlay__ {
+                        ft5x@38 {
+                                compatible = "edt,edt-ft5306";
+                                reg = <0x38>;
+
+                                touchscreen-size-x = <800>;
+                                touchscreen-size-y = <480>;
+
+                                interrupt-parent = <&pio>;
+                                interrupts = <7 7 2>;          /* PH7: IRQ_TYPE_EDGE_FALLING */
+
+                                irq-gpios = <&pio 7 2 0>;      /* PH10 */
+                                reset-gpios = <&pio 7 8 1>;    /* PH11: GPIO_ACTIVE_LOW */
+                        };
+                };
+        };
+	
 };
