@@ -78,6 +78,16 @@ options=(
 		"LCD-OLinuXino-15.6FHD"	"1920x1080 LVDS panel without TS"
 	)
 
+[[ ${soc} == "sun50i-a64" ]] && \
+	options=(
+		"LCD-OLinuXino"		"Auto detection"
+		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-7"	"800x480 panel withouth TS"
+		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-10"	"1024x600 panel without TS"
+		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
+	)
+
 cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 19 70 18)
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 [[ $? -ne 0 ]] && exit 1
@@ -142,6 +152,17 @@ for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
 
 done
 
+# wtf a64. check if soc is compatible
+if [[ ${soc} == "sun50i-a64" ]] ; then
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${soc}" <<< ${compatible} && \
+			target_overlay=${f}
+
+	done
+fi
+
 [[ -z ${target_overlay} ]] && \
 	display_error_dialog "Missing overlay" "There is no board overlay supporting this LCD panel!"
 
@@ -158,7 +179,7 @@ fi
 
 LIST="fdtoverlays="
 for overlay in ${INSTALLED[@]}; do
-	[[ "${overlay}" != *"-lcd-olinuxino"* ]] && \
+	[[ "${overlay}" != *"lcd-olinuxino"* ]] && \
 	[[ "${overlay}" != *"i2c2-gt928"* ]] && \
 	[[ "${overlay}" != *"i2c2-gt911"* ]] && \
 		LIST="${LIST}${overlay} "
@@ -174,6 +195,17 @@ if [[ "${id}" == "9278" ]]; then
 			target_overlay=${f} &&
 			break
 	done
+
+	# meh a64
+	if [[ ${soc} == "sun50i-a64" ]] ; then
+		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
+			# Check if overlay is compatible
+			compatible="$(fdtget $f / compatible)"
+			grep -q -w "${soc}" <<< ${compatible} && \
+				target_overlay=${f} &&
+				break
+		done
+	fi
 	if [[ ! -z ${target_overlay} ]]; then
 		LIST="${LIST} ${target_overlay}"
 	fi
@@ -185,6 +217,15 @@ if [[ "${id}" == "9284" ]]; then
 		# Check if overlay is compatible
 		compatible="$(fdtget $f / compatible)"
 		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+	done
+
+	# meh a64
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${soc}" <<< ${compatible} && \
 			target_overlay=${f} &&
 			break
 	done

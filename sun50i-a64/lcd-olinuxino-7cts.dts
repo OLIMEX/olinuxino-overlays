@@ -4,7 +4,7 @@
 / {
 	compatible = "allwinner,sun50i-a64",
 		     "olimex,a64-olinuxino";
-	description = "LCD-OLinuXino-7 800x480 panel without TS";
+	description = "LCD-OLinuXino-7CTS 1024x600 panel with capacitive TS and I2C interface";
 
 	fragment@0 {
 		target-path = "/";
@@ -20,7 +20,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&lcd_rgb666_pins>;
 
-				compatible = "olimex,lcd-olinuxino-7";
+				compatible = "olimex,lcd-olinuxino-10"; /* This is NOT a mistake */
                                 status = "okay";
 
 

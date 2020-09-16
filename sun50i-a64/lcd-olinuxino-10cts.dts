@@ -4,7 +4,7 @@
 / {
 	compatible = "allwinner,sun50i-a64",
 		     "olimex,a64-olinuxino";
-	description = "LCD-OLinuXino-7 800x480 panel without TS";
+	description = "LCD-OLinuXino-10CTS 1024x600 with capacitive TS and I2C interface";
 
 	fragment@0 {
 		target-path = "/";
@@ -20,9 +20,8 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&lcd_rgb666_pins>;
 
-				compatible = "olimex,lcd-olinuxino-7";
-                                status = "okay";
-
+				compatible = "olimex,lcd-olinuxino-10";
+				status = "okay";
 
 				enable-gpios = <&pio 3 23 0>;
 				backlight = <&backlight>;
