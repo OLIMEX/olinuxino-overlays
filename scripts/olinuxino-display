@@ -3,6 +3,8 @@ UBOOT_ENV="/uboot.env"
 FW_SETENV="fw_setenv"
 BACKTITLE="OLinuXino display configurator"
 
+clear
+
 # Set default resolution
 X=80
 Y=20
@@ -34,15 +36,16 @@ fi
 
 function display_reboot_dialog()
 {
-	dialog --title "Almost done" --backtitle "${BACKTITLE}" --yes-label "Reboot" --no-label "Exit" --yesno "\nAll done. \n
+	whiptail --title "Almost done" --backtitle "${BACKTITLE}" --yes-button "Reboot" --no-button "Exit" --yesno "All done. \n
 Board must be rebooted to apply changes." 7 70
 	[[ $? -ne 0 ]] && exit 0
+	sync
 	reboot
 }
 
 function display_error_dialog()
 {
-	dialog --title "$1" --backtitle "${BACKTITLE}" --msgbox "\n$2" 7 70
+	whiptail --title "$1" --backtitle "${BACKTITLE}" --msgbox "$2" 7 70
 	exit 1
 }
 
@@ -59,24 +62,20 @@ function display_error_dialog()
 	exit 1
 
 
-options=(
-	"LCD-OLinuXino"		"Auto detection"
-	"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
-	"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
-	"LCD-OLinuXino-7"	"800x480 panel without TS"
-	"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
-	"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
-	"LCD-OLinuXino-10"	"1024x600 panel without TS"
-	"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
-	"LCD-OLinuXino-10CTS"	"1024x600 panel with capacitive TS and I2C interface"
-	)
-
 # LVDS panel are only supported on A20 based boards
 [[ ${soc} == "sun7i-a20" ]] && \
-	options+=(
+	options=(
+		"LCD-OLinuXino"		"Auto detection"
+		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-7"	"800x480 panel without TS"
+		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-10"	"1024x600 panel without TS"
+		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-10CTS"	"1024x600 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-15.6"	"1366x768 LVDS panel without TS"
 		"LCD-OLinuXino-15.6FHD"	"1920x1080 LVDS panel without TS"
-		"DISABLE"		"Disable configured panel"
 	)
 
 [[ ${soc} == "sun50i-a64" ]] && \
@@ -88,7 +87,6 @@ options=(
 		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-10"	"1024x600 panel without TS"
 		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
-		"DISABLE"		"Disable configured panel"
 	)
 
 [[ ${soc} == "sun5i-a13" ]] && \
@@ -96,10 +94,13 @@ options=(
 		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
-		"DISABLE"		"Disable configured panel"
 	)
 
-cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 19 70 18)
+options+=(
+	"DISABLE"		"Disable configured panel"
+)
+
+cmd=(whiptail --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "Select LCD panel:" $Y $X $(( $Y - 8 )))
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 [[ $? -ne 0 ]] && exit 1
 
@@ -162,12 +163,14 @@ for choice in $choices; do
 done
 
 # Find target overlay
-for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
-	# Check if overlay is compatible
-	compatible="$(fdtget $f / compatible)"
-	grep -q -w "${board}" <<< ${compatible} && \
-		target_overlay=${f}
-done
+if [ ${soc} == "sun7i-a20" ] ; then
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f}
+	done
+fi
 
 if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
 	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do

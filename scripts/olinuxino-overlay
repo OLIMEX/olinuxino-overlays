@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 # Set default resolution
 X=80
 Y=20
