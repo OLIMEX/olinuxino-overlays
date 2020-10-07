@@ -1,0 +1,20 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun7i-a20";
+	description = "Enable built-in W25Q128 SPI Flash on SPI0";
+
+	fragment@0 {
+		target = <&spi0>;
+		__overlay__ {
+
+			spi-nor@0 {
+				compatible = "jedec,spi-nor";
+				reg = <0>;
+				spi-max-frequency = <10000000>;
+				status = "okay";
+			};
+		};
+	};
+};

@@ -1,0 +1,33 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun7i-a20";
+	description = "Enable UART5 port";
+
+	fragment@0 {
+		target-path = "/aliases";
+		__overlay__ {
+			serial5 = "/soc@1c00000/serial@1c29400";
+		};
+	};
+
+	fragment@1 {
+		target = <&pio>;
+		__overlay__ {
+			uart5_pi_pins: uart5-pi-pins {
+				pins = "PI10", "PI11";
+				function = "uart5";
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&uart5>;
+		 __overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart5_pi_pins>;
+			status = "okay";
+		};
+	};
+};

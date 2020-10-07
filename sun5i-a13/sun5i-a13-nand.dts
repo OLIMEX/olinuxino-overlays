@@ -1,0 +1,25 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun5i-a13";
+	description = "Enable NAND controller";
+
+	fragment@0 {
+		target = <&nfc>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&nand_pins>, <&nand_cs0_pin>, <&nand_rb0_pin>;
+			status = "okay";
+
+			nand@0 {
+				reg = <0>;
+				allwinner,rb = <0>;
+				nand-ecc-mode = "hw";
+				nand-on-flash-bbt;
+			};
+		};
+	};
+};

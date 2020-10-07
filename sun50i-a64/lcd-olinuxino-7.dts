@@ -1,0 +1,76 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "LCD-OLinuXino-7 800x480 panel without TS";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			backlight: backlight {
+				compatible = "pwm-backlight";
+				pwms = <&pwm 0 50000 1>;
+				brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+				default-brightness-level = <10>;
+			};
+
+			panel {
+				pinctrl-names = "default";
+				pinctrl-0 = <&lcd_rgb666_pins>;
+
+				compatible = "olimex,lcd-olinuxino-7";
+                                status = "okay";
+
+
+				enable-gpios = <&pio 3 23 0>;
+				backlight = <&backlight>;
+
+				port {
+					panel_in_tcon0: endpoint {
+						remote-endpoint = <&tcon0_out_panel>;
+					};
+				};
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&pwm>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@2 {
+		target = <&pio>;
+		__overlay__ {
+			lcd_rgb666_pins: lcd-rgb666-pins {
+				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
+				       "PD5", "PD6", "PD7", "PD8", "PD9",
+				       "PD10", "PD11", "PD12", "PD13",
+				       "PD14", "PD15", "PD16", "PD17",
+				       "PD18", "PD19", "PD20", "PD21";
+				function = "lcd0";
+			};
+		};
+	};
+
+	fragment@3 {
+		target = <&tcon0_out>;
+		__overlay__ {
+			tcon0_out_panel: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&panel_in_tcon0>;
+			};
+		};
+	};
+
+	fragment@4 {
+		target = <&emac>;
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+};

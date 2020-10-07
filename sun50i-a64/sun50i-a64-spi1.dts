@@ -1,0 +1,15 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "Enable SPI1 bus!! Multiplexed with LCD D2-D5";
+
+	fragment@0 {
+		target = <&spi1>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};

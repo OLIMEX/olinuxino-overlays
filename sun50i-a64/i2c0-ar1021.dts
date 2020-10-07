@@ -1,0 +1,24 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "Microchip AR1021 CTS controller on I2C2 bus";
+
+	fragment0 {
+		target = <&i2c0>;
+		__overlay__ {
+			ar1021: ar1021@4d {
+                                #address-cells = <1>;
+                                #size-cells = <0>;
+                                compatible = "microchip,ar1021-i2c";
+                                reg = <0x4d>;
+                                interrupt-parent = <&pio>;
+                                interrupts = <7 7 4>;          /* PH7: IRQ_TYPE_LEVEL_HIGH */
+                                touchscreen-inverted-y;
+                        };
+
+		};
+	};
+};

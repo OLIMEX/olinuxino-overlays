@@ -1,0 +1,85 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,a20-olinuxino-lime",
+		     "olimex,a20-olinuxino-lime-emmc";
+	description = "LCD-OLinuXino-15.6 1366x768 LVDS panel without TS";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			backlight: backlight {
+				compatible = "pwm-backlight";
+				pwms = <&pwm 0 50000 0>;
+				brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+				default-brightness-level = <10>;
+			};
+
+			panel {
+				compatible = "panel-lvds";
+
+				pinctrl-names = "default";
+				pinctrl-0 = <&lcd_lvds0_pins>;
+
+				width-mm = <344>;
+				height-mm = <193>;
+				data-mapping = "jeida-18";
+				status = "okay";
+
+				power-supply = <&reg_vcc5v0>;
+
+				enable-gpios = <&pio 7 8 0>;
+				backlight = <&backlight>;
+
+				panel-timing {
+					clock-frequency = <70000000>;
+					hactive = <1366>;
+					hsync-len = <0>;
+					hfront-porch = <20>;
+					hback-porch = <54>;
+					vactive = <768>;
+					vsync-len = <0>;
+					vfront-porch = <17>;
+					vback-porch = <23>;
+				};
+
+				port {
+					panel_in_tcon0: endpoint {
+						remote-endpoint = <&tcon0_out_panel>;
+					};
+				};
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&pwm>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pwm0_pin>;
+			status = "okay";
+		};
+	};
+
+	fragment@2 {
+		target = <&pio>;
+		__overlay__ {
+			lcd_lvds0_pins: lcd-lvds0-pins {
+				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
+				       "PD5", "PD6", "PD7", "PD8", "PD9";
+				function = "lvds0";
+			};
+		};
+	};
+
+	fragment@3 {
+		target = <&tcon0_out>;
+		__overlay__ {
+			tcon0_out_panel: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&panel_in_tcon0>;
+			};
+		};
+	};
+};

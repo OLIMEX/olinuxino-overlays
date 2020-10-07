@@ -1,0 +1,14 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun5i-a13";
+	description = "Enable analog codec";
+
+	fragment@0 {
+		target = <&codec>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};

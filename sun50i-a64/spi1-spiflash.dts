@@ -1,0 +1,21 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "Enable SPI Flash on SPI1!! Multiplexed with LCD D2-D5";
+
+	fragment@0 {
+		target = <&spi1>;
+		__overlay__ {
+
+			spi-nor@0 {
+				compatible = "jedec,spi-nor";
+				reg = <0>;
+				spi-max-frequency = <10000000>;
+				status = "okay";
+			};
+		};
+	};
+};

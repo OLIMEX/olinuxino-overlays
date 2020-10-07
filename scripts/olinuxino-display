@@ -1,0 +1,305 @@
+#!/bin/bash
+UBOOT_ENV="/uboot.env"
+FW_SETENV="fw_setenv"
+BACKTITLE="OLinuXino display configurator"
+
+clear
+
+# Set default resolution
+X=80
+Y=20
+
+if which resize > /dev/null; then
+	eval $(resize)
+	X=$COLUMNS
+	Y=$LINES
+fi
+
+# Detect family
+for comp in $(cat "/proc/device-tree/compatible" | tr '\0' '\n'); do
+	if [[ "$comp" == "allwinner,sun"* ]]; then
+		soc=$(cut -d',' -f2 <<< $comp)
+	elif [[ "$comp" == "olimex,"* ]]; then
+		board="${comp}"
+	fi
+done
+
+if [[ -z ${soc} ]]; then
+	echo "The board is not Allwinner SoC. Exiting."
+	exit 0
+fi
+
+if [[ ! -d "/usr/lib/olinuxino-overlays/${soc}" ]]; then
+	echo "The ${soc} SoC family is not supported. Exiting."
+	exit 0
+fi
+
+function display_reboot_dialog()
+{
+	whiptail --title "Almost done" --backtitle "${BACKTITLE}" --yes-button "Reboot" --no-button "Exit" --yesno "All done. \n
+Board must be rebooted to apply changes." 7 70
+	[[ $? -ne 0 ]] && exit 0
+	sync
+	reboot
+}
+
+function display_error_dialog()
+{
+	whiptail --title "$1" --backtitle "${BACKTITLE}" --msgbox "$2" 7 70
+	exit 1
+}
+
+# Check tools
+! ${FW_SETENV} -v 2>/dev/null && \
+	echo "${FW_SETENV}: not found!" && \
+	exit 1
+
+# Check if /uboot.env exist
+[[ ! -e ${UBOOT_ENV} ]] && \
+	echo "${UBOOT_ENV} is missing.
+	* Copy /usr/lib/u-boot-olinuxino to ${UBOOT_ENV}
+	* Run: saveenv inside u-boot shell" && \
+	exit 1
+
+
+# LVDS panel are only supported on A20 based boards
+[[ ${soc} == "sun7i-a20" ]] && \
+	options=(
+		"LCD-OLinuXino"		"Auto detection"
+		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-7"	"800x480 panel without TS"
+		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-10"	"1024x600 panel without TS"
+		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-10CTS"	"1024x600 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-15.6"	"1366x768 LVDS panel without TS"
+		"LCD-OLinuXino-15.6FHD"	"1920x1080 LVDS panel without TS"
+	)
+
+[[ ${soc} == "sun50i-a64" ]] && \
+	options=(
+		"LCD-OLinuXino"		"Auto detection"
+		"LCD-OLinuXino-4.3"	"480x272 panel without TS"
+		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-7"	"800x480 panel withouth TS"
+		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-10"	"1024x600 panel without TS"
+		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
+	)
+
+[[ ${soc} == "sun5i-a13" ]] && \
+	options=(
+		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
+	)
+
+options+=(
+	"DISABLE"		"Disable configured panel"
+)
+
+cmd=(whiptail --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "Select LCD panel:" $Y $X $(( $Y - 8 )))
+choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+[[ $? -ne 0 ]] && exit 1
+
+for choice in $choices; do
+	case ${choice} in
+	"LCD-OLinuXino")
+		id=""
+		overlay="lcd-olinuxino"
+		;;
+	"LCD-OLinuXino-4.3")
+		# id="" # ??
+		overlay="lcd-olinuxino-4.3"
+		;;
+	"LCD-OLinuXino-4.3TS")
+		overlay="lcd-olinuxino-4.3ts"
+		id=7859
+		;;
+	"LCD-OLinuXino-5")
+		overlay="lcd-olinuxino-5"
+		id=8630
+		;;
+	"LCD-OLinuXino-7")
+		overlay="lcd-olinuxino-7"
+		id=7864
+		;;
+	"LCD-OLinuXino-7TS")
+		overlay="lcd-olinuxino-7ts"
+		id=7864
+		;;
+	"LCD-OLinuXino-7CTS")
+		overlay="lcd-olinuxino-7cts"
+		id=9278
+		;;
+	"LCD-OLinuXino-10")
+		overlay="lcd-olinuxino-10"
+		id=7862
+		;;
+	"LCD-OLinuXino-10TS")
+		overlay="lcd-olinuxino-10ts"
+		id=7862
+		;;
+	"LCD-OLinuXino-10CTS")
+		overlay="lcd-olinuxino-10cts"
+		id=9284
+		;;
+	"LCD-OLinuXino-15.6")
+		overlay="lcd-olinuxino-15.6"
+		id=7891
+		;;
+	"LCD-OLinuXino-15.6FHD")
+		overlay="lcd-olinuxino-15.6fhd"
+		id=7894
+		;;
+	"DISABLE")
+		disable_lcd="yes"
+		;;
+	*)
+		;;
+	esac
+done
+
+# Find target overlay
+if [ ${soc} == "sun7i-a20" ] ; then
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f}
+	done
+fi
+
+if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${soc}" <<< ${compatible} && \
+			target_overlay=${f}
+	done
+fi
+
+[[ -z ${target_overlay} ]] && \
+	display_error_dialog "Missing overlay" "There is no board overlay supporting this LCD panel!"
+
+# Get currently installed overlays
+INSTALLED=""
+if [[ -e "/boot/uEnv.txt" ]]; then
+	while read line; do
+		if [[ "$line" == "fdtoverlays="* ]]; then
+			INSTALLED="$(cut -d '=' -f2 <<< "$line")"
+			break
+		fi
+	done <<< "$(cat "/boot/uEnv.txt")"
+fi
+
+LIST="fdtoverlays="
+for overlay in ${INSTALLED[@]}; do
+	[[ "${overlay}" != *"lcd-olinuxino"* ]] && \
+	[[ "${overlay}" != *"i2c2-gt928"* ]] && \
+	[[ "${overlay}" != *"i2c2-gt911"* ]] && \
+		LIST="${LIST}${overlay} "
+done
+
+if [[ -z "${id}" ]] ; then
+	unset target_overlay
+fi
+
+LIST="${LIST}${target_overlay}"
+LIST_WITHOUT_LCD="${LIST}"
+
+if [[ "${id}" == "9278" ]]; then
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+	done
+
+	if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
+		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
+			# Check if overlay is compatible
+			compatible="$(fdtget $f / compatible)"
+			grep -q -w "${soc}" <<< ${compatible} && \
+				target_overlay=${f} &&
+				break
+		done
+	fi
+	if [[ ! -z ${target_overlay} ]]; then
+		LIST="${LIST} ${target_overlay}"
+	fi
+fi
+
+if [[ "${id}" == "9284" ]]; then
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+	done
+
+	# meh a64
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${soc}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+	done
+	if [[ ! -z ${target_overlay} ]]; then
+		LIST="${LIST} ${target_overlay}"
+	fi
+fi
+
+# Modify /boot/uEnv.txt
+if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^fdtoverlays=" "/boot/uEnv.txt"; then
+	echo ${LIST} >> "/boot/uEnv.txt"
+else
+	sed -i "s/fdtoverlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
+fi
+
+if [[ "${disble_lcd}" == "yes" ]]; then
+	sed -i "s/fdtoverlays=.*/${LIST_WOTHOUT_LCD//\//\\/}/g" "/boot/uEnv.txt"
+fi
+
+# TODO this is broken
+# Set uboot- environment
+fw_setenv lcd_olinuxino ${id}
+
+if [[ -z ${id} ]]; then
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+
+	done
+
+	if [[ ! -z ${target_overlay} ]]; then
+		fw_setenv lcd_olinuxino_9278 ${target_overlay}
+	fi
+
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
+		# Check if overlay is compatible
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+
+	done
+
+	if [[ ! -z ${target_overlay} ]]; then
+		fw_setenv lcd_olinuxino_9284 ${target_overlay}
+	fi
+fi
+
+display_reboot_dialog
