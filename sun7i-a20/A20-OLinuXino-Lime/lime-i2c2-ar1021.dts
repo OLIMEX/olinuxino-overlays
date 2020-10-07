@@ -2,8 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "olimex,a20-olinuxino-micro",
-		     "olimex,a20-olinuxino-micro-emmc";
+	compatible = "olimex,a20-olinuxino-lime",
+		     "olimex,a20-olinuxino-lime-emmc";
 	description = "Microchip AR1021 CTS controller on I2C2 bus";
 
 	fragment0 {

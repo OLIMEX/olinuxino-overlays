@@ -2,8 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "olimex,a20-olinuxino-micro",
-		     "olimex,a20-olinuxino-micro-emmc";
+	compatible = "olimex,a20-olimex-som-evb",
+		     "olimex,a20-olimex-som-evb-emmc";
 	description = "Microchip AR1021 CTS controller on I2C2 bus";
 
 	fragment0 {
@@ -15,7 +15,7 @@
 				compatible = "microchip,ar1021-i2c";
 				reg = <0x4d>;
 				interrupt-parent = <&pio>;
-                                interrupts = <7 12 4>;          /* PH12: IRQ_TYPE_LEVEL_HIGH */
+                                interrupts = <7 10 4>;          /* PH10: IRQ_TYPE_LEVEL_HIGH */
 				touchscreen-inverted-y;
 			};
 		};
