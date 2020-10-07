@@ -82,6 +82,7 @@ options=(
 [[ ${soc} == "sun50i-a64" ]] && \
 	options=(
 		"LCD-OLinuXino"		"Auto detection"
+		"LCD-OLinuXino-4.3"	"480x272 panel without TS"
 		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-7"	"800x480 panel withouth TS"
 		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
@@ -107,6 +108,10 @@ for choice in $choices; do
 	"LCD-OLinuXino")
 		id=""
 		overlay="lcd-olinuxino"
+		;;
+	"LCD-OLinuXino-4.3")
+		# id="" # ??
+		overlay="lcd-olinuxino-4.3"
 		;;
 	"LCD-OLinuXino-4.3TS")
 		overlay="lcd-olinuxino-4.3ts"
