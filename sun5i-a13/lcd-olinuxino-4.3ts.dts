@@ -3,12 +3,12 @@
 
 / {
 compatible = "allwinner,sun5i-a13";
-description = "LCD-OLinuXino-10TS 1024x600 w/wo resistive TS and analog interface";
+description = "LCD-OLinuXino-4.3TS 480x272 panel with resistive TS and analog interface";
 
 fragment@0 {
  target-path = "/panel"; /* or target-path */
 	 __overlay__ {
-		compatible = "olimex,lcd-olinuxino-10";
+		compatible = "olimex,lcd-olinuxino-4.3";
 	};
  }; 
 

@@ -3,7 +3,7 @@
 
 / {
 compatible = "allwinner,sun5i-a13";
-description = "LCD-OLinuXino-7RTS 800x480 panel w/wo resistive TS and I2C interface";
+description = "LCD-OLinuXino-7RTS 800x480 panel with resistive TS and analog interface";
 
 fragment@0 {
  target-path = "/panel"; /* or target-path */
