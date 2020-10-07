@@ -29,6 +29,15 @@ if [[ ! -d "/usr/lib/olinuxino-overlays/${soc}" ]]; then
 	exit 0
 fi
 
+function display_reboot_dialog()
+{
+	whiptail --title "Almost done" --backtitle "${BACKTITLE}" --yes-button "Reboot" --no-button "Exit" --yesno "All done. \n
+Board must be rebooted to apply changes." 7 70
+	[[ $? -ne 0 ]] && exit 0
+	sync
+	reboot
+}
+
 # Get currently installed overlays
 INSTALLED=""
 if [[ -e "/boot/uEnv.txt" ]]; then
@@ -102,3 +111,5 @@ if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^fdtoverlays=" "/boot/uEnv.txt"; th
 else
 	sed -i "s/fdtoverlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
 fi
+
+display_reboot_dialog
