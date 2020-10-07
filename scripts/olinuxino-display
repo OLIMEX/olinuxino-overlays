@@ -76,6 +76,7 @@ options=(
 	options+=(
 		"LCD-OLinuXino-15.6"	"1366x768 LVDS panel without TS"
 		"LCD-OLinuXino-15.6FHD"	"1920x1080 LVDS panel without TS"
+		"DISABLE"		"Disable configured panel"
 	)
 
 [[ ${soc} == "sun50i-a64" ]] && \
@@ -86,6 +87,7 @@ options=(
 		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-10"	"1024x600 panel without TS"
 		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
+		"DISABLE"		"Disable configured panel"
 	)
 
 [[ ${soc} == "sun5i-a13" ]] && \
@@ -93,6 +95,7 @@ options=(
 		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
+		"DISABLE"		"Disable configured panel"
 	)
 
 cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 19 70 18)
@@ -145,6 +148,9 @@ for choice in $choices; do
 		overlay="lcd-olinuxino-15.6fhd"
 		id=7894
 		;;
+	"DISABLE")
+		disable_lcd="yes"
+		;;
 	*)
 		;;
 	esac
@@ -156,7 +162,6 @@ for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
 	compatible="$(fdtget $f / compatible)"
 	grep -q -w "${board}" <<< ${compatible} && \
 		target_overlay=${f}
-
 done
 
 if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
@@ -165,7 +170,6 @@ if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
 		compatible="$(fdtget $f / compatible)"
 		grep -q -w "${soc}" <<< ${compatible} && \
 			target_overlay=${f}
-
 	done
 fi
 
@@ -190,7 +194,13 @@ for overlay in ${INSTALLED[@]}; do
 	[[ "${overlay}" != *"i2c2-gt911"* ]] && \
 		LIST="${LIST}${overlay} "
 done
+
+if [[ -z "${id}" ]] ; then
+	unset target_overlay
+fi
+
 LIST="${LIST}${target_overlay}"
+LIST_WITHOUT_LCD="${LIST}"
 
 if [[ "${id}" == "9278" ]]; then
 	unset target_overlay
@@ -244,6 +254,10 @@ if [[ ! -e "/boot/uEnv.txt" ]] || ! grep -q "^fdtoverlays=" "/boot/uEnv.txt"; th
 	echo ${LIST} >> "/boot/uEnv.txt"
 else
 	sed -i "s/fdtoverlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
+fi
+
+if [[ "${disble_lcd}" == "yes" ]]; then
+	sed -i "s/fdtoverlays=.*/${LIST_WOTHOUT_LCD//\//\\/}/g" "/boot/uEnv.txt"
 fi
 
 # TODO this is broken
