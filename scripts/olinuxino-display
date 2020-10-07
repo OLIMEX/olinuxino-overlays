@@ -63,12 +63,12 @@ options=(
 	"LCD-OLinuXino"		"Auto detection"
 	"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
 	"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
-	"LCD-OLinuXino-7"	"800x480 panel withouth TS"
+	"LCD-OLinuXino-7"	"800x480 panel without TS"
 	"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
 	"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
 	"LCD-OLinuXino-10"	"1024x600 panel without TS"
-	"LCD-OLinuXino-10TS"	"1024x600 with resistive TS and analog interface"
-	"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
+	"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
+	"LCD-OLinuXino-10CTS"	"1024x600 panel with capacitive TS and I2C interface"
 	)
 
 # LVDS panel are only supported on A20 based boards
@@ -86,6 +86,13 @@ options=(
 		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-10"	"1024x600 panel without TS"
 		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
+	)
+
+[[ ${soc} == "sun5i-a13" ]] && \
+	options=(
+		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
 	)
 
 cmd=(dialog --title "Configure LCD output" --backtitle "${BACKTITLE}" --menu "\nSelect LCD panel: \n" 19 70 18)
@@ -152,8 +159,7 @@ for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
 
 done
 
-# wtf a64. check if soc is compatible
-if [[ ${soc} == "sun50i-a64" ]] ; then
+if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
 	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
 		# Check if overlay is compatible
 		compatible="$(fdtget $f / compatible)"
@@ -196,8 +202,7 @@ if [[ "${id}" == "9278" ]]; then
 			break
 	done
 
-	# meh a64
-	if [[ ${soc} == "sun50i-a64" ]] ; then
+	if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
 		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
 			# Check if overlay is compatible
 			compatible="$(fdtget $f / compatible)"
