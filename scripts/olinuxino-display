@@ -311,9 +311,11 @@ if [ "${disable_lcd}" == "yes" ]; then
 	sed -i "s/fdtoverlays=.*/${LIST_WITHOUT_LCD//\//\\/}/g" "/boot/uEnv.txt"
 fi
 
-# TODO this is broken
 # Set uboot- environment
-fw_setenv lcd_olinuxino ${id}
+fw_setenv lcd_olinuxino ""
+if [ "${id}" != "0" ] ; then
+	fw_setenv lcd_olinuxino ${id}
+fi
 
 if [[ -z ${id} ]]; then
 	unset target_overlay
