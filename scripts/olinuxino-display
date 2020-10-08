@@ -75,7 +75,7 @@ function display_error_dialog()
 		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-10"	"1024x600 panel without TS"
 		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
- 		"LCD-OLinuXino-10RTS"	"1024x600 panel with resistive TS and I2C interface"
+		"LCD-OLinuXino-10RTS"	"1024x600 panel with resistive TS and I2C interface"
 		"LCD-OLinuXino-10CTS"	"1024x600 panel with capacitive TS and I2C interface"
 		"LCD-OLinuXino-15.6"	"1366x768 LVDS panel without TS"
 		"LCD-OLinuXino-15.6FHD"	"1920x1080 LVDS panel without TS"
@@ -92,7 +92,7 @@ function display_error_dialog()
 		"LCD-OLinuXino-7RTS"	"800x480 panel with resistive TS and I2C interface"
 		"LCD-OLinuXino-10"	"1024x600 panel without TS"
 		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
- 		"LCD-OLinuXino-10RTS"	"1024x600 panel with resistive TS and I2C interface"
+		"LCD-OLinuXino-10RTS"	"1024x600 panel with resistive TS and I2C interface"
 	)
 
 [[ ${soc} == "sun5i-a13" ]] && \
@@ -355,7 +355,7 @@ else
 	sed -i "s/fdtoverlays=.*/${LIST//\//\\/}/g" "/boot/uEnv.txt"
 fi
 
-if [[ "${disble_lcd}" == "yes" ]]; then
+if [ "${disable_lcd}" == "yes" ]; then
 	sed -i "s/fdtoverlays=.*/${LIST_WOTHOUT_LCD//\//\\/}/g" "/boot/uEnv.txt"
 fi
 
