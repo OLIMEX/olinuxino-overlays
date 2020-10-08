@@ -216,8 +216,8 @@ fi
 LIST="fdtoverlays="
 for overlay in ${INSTALLED[@]}; do
 	[[ "${overlay}" != *"lcd-olinuxino"* ]] && \
-	[[ "${overlay}" != *"i2c2-gt928"* ]] && \
-	[[ "${overlay}" != *"i2c2-gt911"* ]] && \
+	[[ "${overlay}" != *"-gt928"* ]] && \
+	[[ "${overlay}" != *"-gt911"* ]] && \
 	[[ "${overlay}" != *"-ar1021"* ]] && \
 		LIST="${LIST}${overlay} "
 done
