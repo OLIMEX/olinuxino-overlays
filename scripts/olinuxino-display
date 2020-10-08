@@ -308,7 +308,7 @@ else
 fi
 
 if [ "${disable_lcd}" == "yes" ]; then
-	sed -i "s/fdtoverlays=.*/${LIST_WOTHOUT_LCD//\//\\/}/g" "/boot/uEnv.txt"
+	sed -i "s/fdtoverlays=.*/${LIST_WITHOUT_LCD//\//\\/}/g" "/boot/uEnv.txt"
 fi
 
 # TODO this is broken
