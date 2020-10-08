@@ -113,11 +113,11 @@ choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 for choice in $choices; do
 	case ${choice} in
 	"LCD-OLinuXino")
-		id=""
+		id="0"
 		overlay="lcd-olinuxino"
 		;;
 	"LCD-OLinuXino-4.3")
-		# id="" # ??
+		id="0"
 		overlay="lcd-olinuxino-4.3"
 		;;
 	"LCD-OLinuXino-4.3TS")
