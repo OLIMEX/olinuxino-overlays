@@ -62,10 +62,9 @@ function display_error_dialog()
 	exit 1
 
 
-# LVDS panel are only supported on A20 based boards
 [[ ${soc} == "sun7i-a20" ]] && \
 	options=(
-		"LCD-OLinuXino"		"Auto detection"
+		"LCD-OLinuXino"		"Auto detection (without TS)"
 		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-4.3RTS"	"480x272 panel with resistive TS and I2C interface"
 		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
@@ -83,7 +82,7 @@ function display_error_dialog()
 
 [[ ${soc} == "sun50i-a64" ]] && \
 	options=(
-		"LCD-OLinuXino"		"Auto detection"
+		"LCD-OLinuXino"		"Auto detection (without TS)"
 		"LCD-OLinuXino-4.3"	"480x272 panel without TS"
 		"LCD-OLinuXino-4.3RTS"	"480x272 panel with resistive TS and I2C interface"
 		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
