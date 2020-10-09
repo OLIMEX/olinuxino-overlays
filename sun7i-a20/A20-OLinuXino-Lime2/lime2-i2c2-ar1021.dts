@@ -4,7 +4,7 @@
 / {
 	compatible = "olimex,a20-olinuxino-lime2",
 		     "olimex,a20-olinuxino-lime2-emmc";
-	description = "Microchip AR1021 CTS controller on I2C2 bus";
+	description = "Microchip AR1021 RTS controller on I2C2 bus";
 
 	fragment0 {
 		target = <&i2c2>;
