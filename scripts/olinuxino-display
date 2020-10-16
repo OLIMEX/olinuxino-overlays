@@ -1,4 +1,10 @@
 #!/bin/bash
+
+if [ ! "$(id -u)" = "0" ] ; then
+  echo "$0 requires root to run. Exiting."
+  exit
+fi
+
 UBOOT_ENV="/uboot.env"
 FW_SETENV="fw_setenv"
 BACKTITLE="OLinuXino display configurator"
