@@ -1,0 +1,15 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+compatible = "allwinner,sun4i-a10";
+description = "LCD-OLinuXino-10TS 1024x600 panel with resistive TS and analog interface";
+
+fragment@0 {
+ target-path = "/panel"; /* or target-path */
+	 __overlay__ {
+		compatible = "olimex,lcd-olinuxino-10";
+	};
+ }; 
+
+};

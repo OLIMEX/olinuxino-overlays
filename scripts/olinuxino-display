@@ -107,6 +107,13 @@ function display_error_dialog()
 		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
 	)
 
+[[ ${soc} == "sun4i-a10" ]] && \
+	options=(
+		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
+		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
+	)
+
 options+=(
 	"DISABLE"		"Disable configured panel"
 )
@@ -195,7 +202,7 @@ if [ ${soc} == "sun7i-a20" ] ; then
 	done
 fi
 
-if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
+if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" -o ${soc} == "sun4i-a10" ] ; then
 	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
 		# Check if overlay is compatible
 		compatible="$(fdtget $f / compatible)"
