@@ -244,7 +244,7 @@ if [ "${id}" == "9290" -o "${id}" == "9281" -o "${id}" == "9287" ]; then
 			break
 	done
 
-	if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
+	if [ ${soc} == "sun50i-a64" ] ; then
 		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*ar1021.dtbo"); do
 			# Check if overlay is compatible
 			compatible="$(fdtget $f / compatible)"
@@ -268,7 +268,7 @@ if [[ "${id}" == "9278" ]]; then
 			break
 	done
 
-	if [ ${soc} == "sun50i-a64" -o ${soc} == "sun5i-a13" ] ; then
+	if [ ${soc} == "sun50i-a64" ] ; then
 		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
 			# Check if overlay is compatible
 			compatible="$(fdtget $f / compatible)"
