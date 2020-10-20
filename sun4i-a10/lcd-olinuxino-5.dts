@@ -3,7 +3,7 @@
 
 / {
 	compatible = "allwinner,sun4i-a10";
-	description = "LCD-OLinuXino-4.3TS 480x272 panel with resistive TS and analog interface";
+	description = "LCD-OLinuXino-5CTS 800x480 panel with capacitive TS and I2C interface";
 
 	fragment@0 {
 		target-path = "/";
@@ -19,7 +19,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&lcd_rgb888_pins>;
 
-				compatible = "olimex,lcd-olinuxino-4.3";
+				compatible = "olimex,lcd-olinuxino-5";
 				status = "okay";
 
 				enable-gpios = <&pio 7 8 0>;
@@ -69,10 +69,21 @@
 	};
 
 	fragment@4 {
-		target = <&rtp>;
+		target = <&i2c2>;
 		__overlay__ {
-			allwinner,ts-attached;
-			touchscreen-inverted-x;
+			ft5x@38 {
+				compatible = "edt,edt-ft5306";
+				reg = <0x38>;
+
+				touchscreen-size-x = <800>;
+				touchscreen-size-y = <480>;
+
+				interrupt-parent = <&pio>;
+				interrupts = <7 12 2>;		/* PH12: IRQ_TYPE_EDGE_FALLING */
+
+				irq-gpios = <&pio 7 12 0>;	/* PH12 */
+				reset-gpios = <&pio 1 13 1>;	/* PB13: GPIO_ACTIVE_LOW */
+			};
 		};
 	};
 };

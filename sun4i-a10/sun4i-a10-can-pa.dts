@@ -1,0 +1,28 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun4i-a10";
+	description = "Enable CAN controller on PA";
+
+	fragment@0 {
+		target = <&pio>;
+		__overlay__ {
+			can_pa_pins: can-pa-pins {
+				pins = "PA16", "PA17";
+				function = "can";
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&can0>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&can_pa_pins>;
+			status = "okay";
+		};
+	};
+
+
+};

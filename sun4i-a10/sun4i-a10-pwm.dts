@@ -1,0 +1,26 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun4i-a10";
+	description = "Enable PWM controller";
+
+	fragment@0 {
+		target = <&pio>;
+		__overlay__ {
+			pwm0_pin: pwm0-pin {
+				pins = "PB2";
+				function = "pwm";
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&pwm>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pwm0_pin>;
+			status = "okay";
+		};
+	};
+};

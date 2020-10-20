@@ -3,7 +3,7 @@
 
 / {
 	compatible = "allwinner,sun4i-a10";
-	description = "LCD-OLinuXino-4.3TS 480x272 panel with resistive TS and analog interface";
+	description = "LCD-OLinuXino-4.3 480x272 panel without TS";
 
 	fragment@0 {
 		target-path = "/";
@@ -65,14 +65,6 @@
 				reg = <0>;
 				remote-endpoint = <&panel_in_tcon0>;
 			};
-		};
-	};
-
-	fragment@4 {
-		target = <&rtp>;
-		__overlay__ {
-			allwinner,ts-attached;
-			touchscreen-inverted-x;
 		};
 	};
 };

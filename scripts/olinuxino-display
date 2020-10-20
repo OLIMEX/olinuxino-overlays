@@ -68,7 +68,7 @@ function display_error_dialog()
 	exit 1
 
 
-[[ ${soc} == "sun7i-a20" ]] && \
+[ ${soc} == "sun7i-a20" -o ${soc} == "sun4i-a10" ] && \
 	options=(
 		"LCD-OLinuXino"		"Auto detection (without TS)"
 		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
@@ -101,13 +101,6 @@ function display_error_dialog()
 	)
 
 [[ ${soc} == "sun5i-a13" ]] && \
-	options=(
-		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
-		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
-		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
-	)
-
-[[ ${soc} == "sun4i-a10" ]] && \
 	options=(
 		"LCD-OLinuXino-4.3TS"	"480x272 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
@@ -251,7 +244,7 @@ if [ "${id}" == "9290" -o "${id}" == "9281" -o "${id}" == "9287" ]; then
 			break
 	done
 
-	if [ ${soc} == "sun50i-a64" ] ; then
+	if [ ${soc} == "sun50i-a64" -o ${soc} == "sun4i-a10" ] ; then
 		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*ar1021.dtbo"); do
 			# Check if overlay is compatible
 			compatible="$(fdtget $f / compatible)"
@@ -275,7 +268,7 @@ if [[ "${id}" == "9278" ]]; then
 			break
 	done
 
-	if [ ${soc} == "sun50i-a64" ] ; then
+	if [ ${soc} == "sun50i-a64" -o ${soc} == "sun4i-a10" ] ; then
 		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911.dtbo"); do
 			# Check if overlay is compatible
 			compatible="$(fdtget $f / compatible)"
@@ -299,14 +292,15 @@ if [[ "${id}" == "9284" ]]; then
 			break
 	done
 
-	# meh a64
-	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
-		# Check if overlay is compatible
-		compatible="$(fdtget $f / compatible)"
-		grep -q -w "${soc}" <<< ${compatible} && \
-			target_overlay=${f} &&
-			break
-	done
+	if [ ${soc} == "sun50i-a64" -o ${soc} == "sun4i-a10" ] ; then
+		for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt928.dtbo"); do
+			# Check if overlay is compatible
+			compatible="$(fdtget $f / compatible)"
+			grep -q -w "${soc}" <<< ${compatible} && \
+				target_overlay=${f} &&
+				break
+		done
+	fi
 	if [[ ! -z ${target_overlay} ]]; then
 		LIST="${LIST} ${target_overlay}"
 	fi
