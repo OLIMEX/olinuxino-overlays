@@ -166,7 +166,7 @@ for choice in $choices; do
 		id=9284
 		;;
 	"LCD-OLinuXino-10RTS")
-		overlay="lcd-olinuxino-10cts"
+		overlay="lcd-olinuxino-10"
 		id=9287
 		;;
 	"LCD-OLinuXino-15.6")
