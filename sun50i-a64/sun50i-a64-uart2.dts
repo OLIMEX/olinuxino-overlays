@@ -1,0 +1,22 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+                     "olimex,a64-olinuxino";
+	description = "Enable UART2 port";
+
+	fragment@0 {
+		target-path = "/aliases";
+		__overlay__ {
+			serial3 = "/soc/serial@1c28800";
+		};
+	};
+
+	fragment@1 {
+		target = <&uart2>;
+		 __overlay__ {
+			status = "okay";
+		};
+	};
+};
