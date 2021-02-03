@@ -24,7 +24,7 @@
                                 status = "okay";
 
 
-				enable-gpios = <&pio 3 23 1>;
+				enable-gpios = <&pio 3 23 0>;
 				backlight = <&backlight>;
 
 				port {
