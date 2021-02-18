@@ -25,20 +25,20 @@ build:
 
 deploy:staging:
   script:
-    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
-    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include bionic $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
-    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include focal $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
-    - reprepro -b /var/www/html/staging --ignore=wrongdistribution include sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
+    - |
+      for repo in $REPOS ; do
+        reprepro -b /var/www/html/staging --ignore=wrongdistribution include $repo $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
+      done
   stage: deploy
   tags:
     - deploy
 
 deploy:repository:
   script:
-    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include buster $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
-    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include bionic $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
-    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include focal $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
-    - reprepro -b /var/www/html/repository --ignore=wrongdistribution include sid $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
+    - |
+      for repo in $REPOS ; do
+        reprepro -b /var/www/html/repository --ignore=wrongdistribution include $repo $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*.changes
+      done
   stage: deploy
   tags:
     - deploy
