@@ -1,0 +1,21 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "Enable MOD-RTC2 on UEXT";
+
+	fragment@0 {
+		target = <&i2c1>;
+		__overlay__ {
+			status = "okay";
+
+			ds3231: ds3231@68 {
+				compatible = "maxim,ds3231";
+				reg = <0x68>;
+				status = "okay";
+			};
+		};
+	};
+};
