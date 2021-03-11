@@ -3,8 +3,8 @@ Maintainer: Olimex Dev team <support@olimex.com>
 Section: kernel
 Priority: optional
 Standards-Version: 4.4.1
-Vcs-Browser: https://github.com/OLIMEX/OLIMEX-sunxi-overlays
-Vcs-git: https://github.com/OLIMEX/OLIMEX-sunxi-overlays.git
+Vcs-Browser: https://github.com/OLIMEX/olinuxino-overlays
+Vcs-git: https://github.com/OLIMEX/olinuxino-overlays.git
 Build-Depends:
  debhelper-compat (= 12),
  device-tree-compiler
