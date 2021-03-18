@@ -1,0 +1,15 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,a20-olinuxino-lime",
+		     "olimex,a20-olinuxino-lime-emmc";
+	description = "Enable audio codec on LIME";
+
+	fragment@0 {
+		target = <&codec>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};
