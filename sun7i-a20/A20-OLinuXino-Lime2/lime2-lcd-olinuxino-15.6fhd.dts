@@ -34,7 +34,7 @@
 				backlight = <&backlight>;
 
 				panel-timing {
-					clock-frequency = <152000000>;
+					clock-frequency = <76000000>;
 					hactive = <1920>;
 					hsync-len = <60>;
 					hfront-porch = <150>;
