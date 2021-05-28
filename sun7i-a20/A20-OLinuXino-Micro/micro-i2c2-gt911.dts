@@ -19,7 +19,7 @@
 				irq-gpios = <&pio 7 12 0>;	/* PH12 */
 				reset-gpios = <&pio 1 13 0>;	/* PB13: GPIO_ACTIVE_HIGH */
 
-				touchscreen-swapped-x-y;
+				//touchscreen-swapped-x-y;
 			};
 		};
 	};
