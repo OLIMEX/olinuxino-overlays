@@ -19,6 +19,8 @@ fi
 for comp in $(cat "/proc/device-tree/compatible" | tr '\0' '\n'); do
 	if [[ "$comp" == "allwinner,sun"* ]]; then
 		soc=$(cut -d',' -f2 <<< $comp)
+	elif [[ "$comp" == "st,stm32mp1"* ]]; then
+                soc="stm32mp1"
 	elif [[ "$comp" == "olimex,"* ]]; then
 		board="${comp}"
 	fi

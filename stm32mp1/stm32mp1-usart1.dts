@@ -1,0 +1,58 @@
+/dts-v1/;
+/plugin/;
+/ {
+	compatible = "olimex,stm32mp1xx-olinuxino-som",
+		    "olimex,stm32mp1xx-olinuxino-lime";
+	description = "Enable USART1 port";
+
+	fragment@0 {
+		target = <&pinctrl_z>;
+		__overlay__ {
+			usart1_pins_s: usart1-1 {
+				pins1 {
+					pinmux = <0x19708>;/* usart1_TX */
+					bias-disable;
+					drive-push-pull;
+					slew-rate = <0>;
+				};
+				pins2 {
+					pinmux = <0x19608>; /* usart1_RX */
+					bias-disable;
+				};
+			};
+			usart1_idle_pins_a: usart1-idle-0 {
+				pins1 {
+					pinmux = <0x19711>; /* USART1_TX */
+				};
+				pins2 {
+					pinmux = <0x19608>; /* USART1_RX */
+					bias-disable;
+				};
+			};
+			usart1_sleep_pins_a: usart1-sleep-0 {
+				pins {
+					pinmux = <0x19711 0x19611>;
+				};
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&usart1>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&usart1_pins_s>;
+			pinctrl-1 = <&usart1_sleep_pins_a>;
+			pinctrl-2 = <&usart1_idle_pins_a>;
+			st,hw-flow-ctrl;
+			status = "okay";
+		};
+	};
+
+	fragment@2 {
+		target-path = "/aliases";
+		__overlay__ {
+			serial1 = "/soc/serial@5c000000";
+		};
+	};
+};

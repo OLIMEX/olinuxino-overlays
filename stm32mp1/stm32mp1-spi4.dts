@@ -1,0 +1,54 @@
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,stm32mp1xx-olinuxino-som",
+		     "olimex,stm32mp1xx-olinuxino-lime";
+	description = "Enable SPI4 port";
+
+	fragment@0 {
+		target = <&pinctrl>;
+		__overlay__ {
+			spi4_pins_s: spi4-1 {
+				pins1 {
+					pinmux = < 0x4c06 0x4e06 >;
+					bias-disable;
+					drive-push-pull;
+					slew-rate = <1>;
+				};
+
+				pins2 {
+					pinmux = <0x4d06>; /* SPI4_MISO */
+					bias-disable;
+				};
+			};
+
+			spi4_sleep_pins_s: spi4-sleep-1 {
+				pins {
+					pinmux = <0x4c11 0x4d11 0x4e11 >;
+				};
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&spi4>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pinctrl-names = "default", "sleep";
+			pinctrl-0 = <&spi4_pins_s>;
+			pinctrl-1 = <&spi4_sleep_pins_s>;
+			cs-gpios = <&gpioe 11 1>;
+			status = "okay";
+			spi0channel@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				compatible = "spidev";
+				reg = <0>;
+				spi-max-frequency = <20000000>;
+			};
+		};
+	};
+};
