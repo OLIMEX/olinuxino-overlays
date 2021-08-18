@@ -1,8 +1,7 @@
 /dts-v1/;
 /plugin/;
 / {
-	compatible = "olimex,stm32mp1xx-olinuxino-som",
-		     "olimex,stm32mp1xx-olinuxino-lime";
+	compatible = "olimex,stm32mp1xx-olinuxino-som";
 	description = "Enable UART7 port";
 
 	fragment@0 {

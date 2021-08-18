@@ -2,8 +2,7 @@
 /plugin/;
 
 / {
-	compatible = "olimex,stm32mp1xx-olinuxino-som",
-		     "olimex,stm32mp1xx-olinuxino-lime";
+	compatible = "olimex,stm32mp1xx-olinuxino-som";
 	description = "Enable I2C6 port";
 
 	fragment@0 {
