@@ -73,33 +73,14 @@
                                 reg = <0x14>;
 
                                 interrupt-parent = <&gpioi>;
-                                interrupts = <11 IRQ_TYPE_EDGE_FALLING>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
+                                interrupts = <11 2>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
 
                                 irq-gpios = <&gpioi 11 0>;      /* PH10 */
-                                reset-gpios = <&gpioa 14 GPIO_ACTIVE_HIGH>;    /* PA14: GPIO_ACTIVE_HIGH */
+                                reset-gpios = <&gpioa 14 0>;    /* PA14: GPIO_ACTIVE_HIGH */
 
                                 touchscreen-swapped-x-y;
                         };
 		};
 	};
-};
-
- 	fragment@4 {
-                target = <&i2c1>;
-                __overlay__ {
-                        gt911@14 {
-                                compatible = "goodix,gt928";
-                                reg = <0x14>;
-
-                                interrupt-parent = <&gpioi>;
-                                interrupts = <11 IRQ_TYPE_EDGE_FALLING>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
-
-                                irq-gpios = <&gpioi 11 0>;      /* PH10 */
-                                reset-gpios = <&gpioa 14 GPIO_ACTIVE_HIGH>;    /* PA14: GPIO_ACTIVE_HIGH */
-
-                                touchscreen-swapped-x-y;
-                        };
-                };
-        };
 };
 	
