@@ -1,0 +1,105 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,stm32mp1xx-olinuxino-som";
+	description = "LCD-OLinuXino-10CTS 1024x600 with capacitive TS and I2C interface";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			display_bl: display-bl {
+                                    compatible = "pwm-backlight";
+                                    pwms = <&pwm4 1 50000 1>;
+                                    brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+                                    default-brightness-level = <10>;
+                                    enable-gpios = <&gpiof 13 1>;
+                                    status = "okay";
+                        };
+			panel {
+                              compatible = "olimex,lcd-olinuxino-10";
+                              backlight = <&display_bl>;
+                              port {
+                                lcd_panel_in: endpoint {
+                                       remote-endpoint = <&lcd_display_out>;
+                                };
+                            };
+                      };
+		};
+	};
+
+	fragment@1 {
+		target = <&ltdc>;
+		__overlay__ {
+		pinctrl-names = "default", "sleep";
+                pinctrl-0 = <&ltdc_pins_b>;
+                pinctrl-1 = <&ltdc_sleep_pins_b>;
+                status = "okay";
+                port {
+                        lcd_display_out: endpoint {
+                        remote-endpoint = <&lcd_panel_in>;
+                    };
+               };
+	    };
+	};
+
+	fragment@2 {
+	 target = <&pinctrl>;
+                __overlay__ {
+                        ltdc_pins_b: ltdc-1 {
+                                pins {
+                                        pinmux = <0x8E0F 0x8C0F 0x8D0F 0xA70F 0x8F0F 0x900F 0x910F 0x920F 0x930F 0x940F 0x950F 0x960F 0x970F 0x980F 0x990F 0x9A0F 0x9B0F 0xA00F 0xA10F 0xA20F 0x9C0F 0x9D0F 0x9E0F 0x9F0F 0xA30F 0xA40F 0xA50F 0xA60F>;
+					bias-disable;
+                                        drive-push-pull;
+                                        slew-rate = <1>;
+
+                                };
+                        };
+
+                        ltdc_sleep_pins_b: ltdc-sleep-1  {
+                                pins {
+                                        pinmux = <0x8e11 0x8c11 0x8d11 0xa711 0x8f11 0x9011 0x9111 0x9211 0x9311 0x9411 0x9511 0x9611 0x9711 0x9811 0x9911 0x9a11 0x9b11 0xa011 0xa111 0xa211 0x9c11 0x9d11 0x9e11 0x9f11 0xa311 0xa411 0xa511 0xa611>;
+                                };
+                        };
+                };
+
+	};
+
+	fragment@3 {
+		target = <&i2c1>;
+		__overlay__ {
+			gt911@14 {
+                                compatible = "goodix,gt928";
+                                reg = <0x14>;
+
+                                interrupt-parent = <&gpioi>;
+                                interrupts = <11 IRQ_TYPE_EDGE_FALLING>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
+
+                                irq-gpios = <&gpioi 11 0>;      /* PH10 */
+                                reset-gpios = <&gpioa 14 GPIO_ACTIVE_HIGH>;    /* PA14: GPIO_ACTIVE_HIGH */
+
+                                touchscreen-swapped-x-y;
+                        };
+		};
+	};
+};
+
+ 	fragment@4 {
+                target = <&i2c1>;
+                __overlay__ {
+                        gt911@14 {
+                                compatible = "goodix,gt928";
+                                reg = <0x14>;
+
+                                interrupt-parent = <&gpioi>;
+                                interrupts = <11 IRQ_TYPE_EDGE_FALLING>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
+
+                                irq-gpios = <&gpioi 11 0>;      /* PH10 */
+                                reset-gpios = <&gpioa 14 GPIO_ACTIVE_HIGH>;    /* PA14: GPIO_ACTIVE_HIGH */
+
+                                touchscreen-swapped-x-y;
+                        };
+                };
+        };
+};
+	
