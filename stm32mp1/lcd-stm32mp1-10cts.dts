@@ -31,10 +31,6 @@
 	fragment@1 {
 		target = <&ltdc>;
 		__overlay__ {
-		pinctrl-names = "default", "sleep";
-                pinctrl-0 = <&ltdc_pins_b>;
-                pinctrl-1 = <&ltdc_sleep_pins_b>;
-                status = "okay";
                 port {
                         lcd_display_out: endpoint {
                         remote-endpoint = <&lcd_panel_in>;
@@ -44,28 +40,6 @@
 	};
 
 	fragment@2 {
-	 target = <&pinctrl>;
-                __overlay__ {
-                        ltdc_pins_b: ltdc-1 {
-                                pins {
-                                        pinmux = <0x8E0F 0x8C0F 0x8D0F 0xA70F 0x8F0F 0x900F 0x910F 0x920F 0x930F 0x940F 0x950F 0x960F 0x970F 0x980F 0x990F 0x9A0F 0x9B0F 0xA00F 0xA10F 0xA20F 0x9C0F 0x9D0F 0x9E0F 0x9F0F 0xA30F 0xA40F 0xA50F 0xA60F>;
-					bias-disable;
-                                        drive-push-pull;
-                                        slew-rate = <1>;
-
-                                };
-                        };
-
-                        ltdc_sleep_pins_b: ltdc-sleep-1  {
-                                pins {
-                                        pinmux = <0x8e11 0x8c11 0x8d11 0xa711 0x8f11 0x9011 0x9111 0x9211 0x9311 0x9411 0x9511 0x9611 0x9711 0x9811 0x9911 0x9a11 0x9b11 0xa011 0xa111 0xa211 0x9c11 0x9d11 0x9e11 0x9f11 0xa311 0xa411 0xa511 0xa611>;
-                                };
-                        };
-                };
-
-	};
-
-	fragment@3 {
 		target = <&i2c1>;
 		__overlay__ {
 			gt911@14 {
