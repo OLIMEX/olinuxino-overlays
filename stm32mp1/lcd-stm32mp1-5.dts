@@ -3,7 +3,7 @@
 
 / {
 	compatible = "olimex,stm32mp1xx-olinuxino-som";
-	description = "LCD-OLinuXino-10CTS 1024x600 with capacitive TS and I2C interface";
+	description = "LCD-OLinuXino-5CTS 800x480 panel with capacitive TS and I2C interface";
 
 	fragment@0 {
 		target-path = "/";
@@ -17,7 +17,7 @@
                                     status = "okay";
                         };
 			panel {
-                              compatible = "olimex,lcd-olinuxino-10";
+                              compatible = "olimex,lcd-olinuxino-5";
                               backlight = <&display_bl>;
                               port {
                                 lcd_panel_in: endpoint {
@@ -42,9 +42,12 @@
 	fragment@2 {
 		target = <&i2c1>;
 		__overlay__ {
-			gt911@14 {
-                                compatible = "goodix,gt928";
-                                reg = <0x14>;
+			ft5x@38 {
+				compatible = "edt,edt-ft5306";
+				reg = <0x38>;
+
+				touchscreen-size-x = <800>;
+				touchscreen-size-y = <480>;
 
                                 interrupt-parent = <&gpioi>;
                                 interrupts = <11 2>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
@@ -52,7 +55,6 @@
                                 irq-gpios = <&gpioi 11 0>;      /* PH10 */
                                 reset-gpios = <&gpioa 14 0>;    /* PA13: GPIO_ACTIVE_HIGH */
 
-                                touchscreen-swapped-x-y;
                         };
 		};
 	};
