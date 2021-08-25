@@ -32,7 +32,7 @@
                                           vcn33-supply = <&hdmi_3v3>;
                                           vcn18-supply = <&hdmi_1v8>;
                                           vrf12-supply = <&hdmi_1v2>;
-                                          reset-gpios = <&gpiof 3  GPIO_ACTIVE_LOW >;
+                                          reset-gpios = <&gpiof 3 1>;
                                           reg = <0x4d>;
                                           pclk-dual-edge;
 
