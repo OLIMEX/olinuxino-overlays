@@ -1,0 +1,49 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,stm32mp1xx-olinuxino-som";
+	description = "STM32MP1-OLinuXino Enable HDMI";
+
+
+	fragment@0 {
+		target = <&ltdc>;
+		__overlay__ {
+                           port {
+ 	                        #address-cells = <1>;
+        	                #size-cells = <0>;
+
+                                ltdc_ep0_out: endpoint@0 {
+                                               reg = <0>;
+                                               remote-endpoint = <&it66121_in>;
+                                              };
+                           };
+
+	                 };
+	};
+
+	fragment@1 {
+		target = <&i2c4>;
+		__overlay__ {
+			it66121hdmitx: it66121hdmitx@4d {
+                                          compatible = "ite,it66121";
+                                          interrupts = <8 2>;
+                                          interrupt-parent = <&gpioi>;
+                                          vcn33-supply = <&hdmi_3v3>;
+                                          vcn18-supply = <&hdmi_1v8>;
+                                          vrf12-supply = <&hdmi_1v2>;
+                                          reset-gpios = <&gpiof 3  GPIO_ACTIVE_LOW >;
+                                          reg = <0x4d>;
+                                          pclk-dual-edge;
+
+                                         port {
+                                            it66121_in: endpoint {
+                                                     remote-endpoint = <&ltdc_ep0_out>;
+                                            };
+                                        };
+                     };
+
+		};
+	};
+};
+	
