@@ -27,8 +27,8 @@
 		__overlay__ {
 			it66121hdmitx: it66121hdmitx@4d {
                                           compatible = "ite,it66121";
-                                          interrupts = <8 2>;
                                           interrupt-parent = <&gpioi>;
+                                          interrupts = <8 IRQ_TYPE_LEVEL_LOW>;         
                                           vcn33-supply = <&hdmi_3v3>;
                                           vcn18-supply = <&hdmi_1v8>;
                                           vrf12-supply = <&hdmi_1v2>;
