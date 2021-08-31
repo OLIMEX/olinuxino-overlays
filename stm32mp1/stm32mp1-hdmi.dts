@@ -2,7 +2,9 @@
 /plugin/;
 
 / {
-	compatible = "olimex,stm32mp1xx-olinuxino-som";
+	compatible = "olimex,stm32mp1xx-olinuxino-som",
+                     "olimex,stm32mp1xx-olinuxino-lime";
+
 	description = "STM32MP1-OLinuXino Enable HDMI";
 
 
@@ -28,7 +30,7 @@
 			it66121hdmitx: it66121hdmitx@4d {
                                           compatible = "ite,it66121";
                                           interrupt-parent = <&gpioi>;
-                                          interrupts = <8 IRQ_TYPE_LEVEL_LOW>;         
+                                          interrupts = <8 8>;         
                                           vcn33-supply = <&hdmi_3v3>;
                                           vcn18-supply = <&hdmi_1v8>;
                                           vrf12-supply = <&hdmi_1v2>;
