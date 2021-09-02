@@ -32,8 +32,8 @@
                                           interrupt-parent = <&gpioi>;
                                           interrupts = <8 8>;         
                                           vcn33-supply = <&hdmi_3v3>;
-                                          vcn18-supply = <&hdmi_1v8>;
-                                          vrf12-supply = <&hdmi_1v2>;
+                                          vcn18-supply = <&reg_ldo4>;
+                                          vrf12-supply = <&reg_ldo3>;
                                           reset-gpios = <&gpiof 3 1>;
                                           reg = <0x4d>;
                                           pclk-dual-edge;
