@@ -53,10 +53,9 @@
                                           vrf12-supply = <&reg_ldo3>;
                                           reset-gpios = <&gpiof 3 1>;
                                           reg = <0x4d>;
-//                                          pclk-dual-edge;
 					  ports {
-							#address-cells = <1>;
-￼					                #size-cells = <0>;
+					       #address-cells = <1>;
+￼					       #size-cells = <0>;
 						port@0 {
 				                    reg = <0>;
 				                    it66121_in: endpoint {
@@ -66,7 +65,7 @@
                                                };
 
 					
-						};
+					
 						port@1 {
                     				       reg = <1>;
 					               hdmi_conn_out: endpoint {
@@ -74,6 +73,7 @@
                                                       };
                                                 };
 
+					};
 /*
                                          port {
                                             it66121_in: endpoint {
