@@ -44,7 +44,7 @@
 	fragment@2 {
 		target = <&i2c4>;
 		__overlay__ {
-			it66121hdmitx: it66121hdmitx@4d {
+			it66121hdmitx: hdmitx@4d {
                                           compatible = "ite,it66121";
                                           interrupt-parent = <&gpioi>;
                                           interrupts = <8 8>;         
