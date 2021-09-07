@@ -41,7 +41,7 @@
 	                 };
 	};
 
-	fragment@1 {
+	fragment@2 {
 		target = <&i2c4>;
 		__overlay__ {
 			it66121hdmitx: it66121hdmitx@4d {
@@ -55,11 +55,11 @@
                                           reg = <0x4d>;
 					  ports {
 					       #address-cells = <1>;
-￼					       #size-cells = <0>;
+//￼					       #size-cells = <1>;
 						port@0 {
 				                    reg = <0>;
 				                    it66121_in: endpoint {
-				                        bus-width = <12>;
+				                        bus-width = <16>;
 				                        remote-endpoint = <&ltdc_ep0_out>;
                     				    };
                                                };
@@ -74,12 +74,7 @@
                                                 };
 
 					};
-/*
-                                         port {
-                                            it66121_in: endpoint {
-                                                     remote-endpoint = <&ltdc_ep0_out>;
-                                            };
-                                        };*/
+
                      };
 
 		};
