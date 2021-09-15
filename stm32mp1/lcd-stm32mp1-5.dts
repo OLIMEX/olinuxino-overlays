@@ -2,7 +2,8 @@
 /plugin/;
 
 / {
-	compatible = "olimex,stm32mp1xx-olinuxino-som";
+	compatible = "olimex,stm32mp1xx-olinuxino-som",
+                     "olimex,stm32mp1xx-olinuxino-lime";
 	description = "LCD-OLinuXino-5CTS 800x480 panel with capacitive TS and I2C interface";
 
 	fragment@0 {
