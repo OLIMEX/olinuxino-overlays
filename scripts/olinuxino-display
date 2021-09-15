@@ -28,6 +28,11 @@ for comp in $(cat "/proc/device-tree/compatible" | tr '\0' '\n'); do
 	elif [[ "$comp" == "olimex,"* ]]; then
 		board="${comp}"
 	fi
+
+	if [[ "$comp" == "st,stm32mp1"* ]]; then
+		soc="stm32mp1"
+	fi
+
 done
 
 if [[ -z ${soc} ]]; then
@@ -107,6 +112,14 @@ function display_error_dialog()
 		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
 	)
 
+[[ ${soc} == "stm32mp1" ]] && \
+	options=(
+		"LCD-OLinuXino-5"	"800x480 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-10CTS"	"1024x600 with capacitive TS and I2C interface"
+		"HDMI"			"Enable HDMI"
+	)
+
 options+=(
 	"DISABLE"		"Disable configured panel"
 )
@@ -135,6 +148,9 @@ for choice in $choices; do
 		;;
 	"LCD-OLinuXino-5")
 		overlay="lcd-olinuxino-5"
+		if [ "${soc}" == "stm32mp1" ] ; then
+			overlay="lcd-stm32mp1-5"
+		fi
 		id=8630
 		;;
 	"LCD-OLinuXino-7")
@@ -147,6 +163,9 @@ for choice in $choices; do
 		;;
 	"LCD-OLinuXino-7CTS")
 		overlay="lcd-olinuxino-7cts"
+		if [ "${soc}" == "stm32mp1" ] ; then
+			overlay="lcd-stm32mp1-7cts"
+		fi
 		id=9278
 		;;
 	"LCD-OLinuXino-7RTS")
@@ -163,6 +182,9 @@ for choice in $choices; do
 		;;
 	"LCD-OLinuXino-10CTS")
 		overlay="lcd-olinuxino-10cts"
+		if [ "${soc}" == "stm32mp1" ] ; then
+			overlay="lcd-stm32mp1-10cts"
+		fi
 		id=9284
 		;;
 	"LCD-OLinuXino-10RTS")
@@ -177,6 +199,12 @@ for choice in $choices; do
 		overlay="lcd-olinuxino-15.6fhd"
 		id=7894
 		;;
+	"HDMI")
+		if [ "${soc}" == "stm32mp1" ] ; then
+			overlay="stm32mp1-hdmi"
+		fi
+		id="0"
+		;;
 	"DISABLE")
 		disable_lcd="yes"
 		;;
@@ -186,7 +214,7 @@ for choice in $choices; do
 done
 
 # Find target overlay
-if [ ${soc} == "sun7i-a20" ] ; then
+if [ ${soc} == "sun7i-a20" -o ${soc} == "stm32mp1" ] ; then
 	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*${overlay}.dtbo"); do
 		# Check if overlay is compatible
 		compatible="$(fdtget $f / compatible)"
@@ -221,6 +249,8 @@ fi
 LIST="fdtoverlays="
 for overlay in ${INSTALLED[@]}; do
 	[[ "${overlay}" != *"lcd-olinuxino"* ]] && \
+	[[ "${overlay}" != *"lcd-stm32mp1"* ]] && \
+	[[ "${overlay}" != *"stm32mp1-hdmi"* ]] && \
 	[[ "${overlay}" != *"-gt928"* ]] && \
 	[[ "${overlay}" != *"-gt911"* ]] && \
 	[[ "${overlay}" != *"-ar1021"* ]] && \
@@ -318,9 +348,11 @@ if [ "${disable_lcd}" == "yes" ]; then
 fi
 
 # Set uboot- environment
-fw_setenv lcd_olinuxino ""
-if [ "${id}" != "0" ] ; then
-	fw_setenv lcd_olinuxino ${id}
+if [ "${soc}" != "stm32mp1" ] ; then
+	fw_setenv lcd_olinuxino ""
+	if [ "${id}" != "0" ] ; then
+		fw_setenv lcd_olinuxino ${id}
+	fi
 fi
 
 if [[ -z ${id} ]]; then
