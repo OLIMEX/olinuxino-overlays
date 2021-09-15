@@ -53,8 +53,8 @@
                                 interrupt-parent = <&gpioi>;
                                 interrupts = <11 2>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
 
-                                irq-gpios = <&gpioi 11 0>;      /* PH10 */
-                                reset-gpios = <&gpioa 14 0>;    /* PA13: GPIO_ACTIVE_HIGH */
+                                irq-gpios = <&gpioi 11 0>;      /* PI11 */
+                                reset-gpios = <&gpioa 14 1>;    /* PA14: GPIO_ACTIVE_LOW */
 
                         };
 		};
