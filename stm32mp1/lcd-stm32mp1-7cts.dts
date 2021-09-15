@@ -43,16 +43,17 @@
 	fragment@2 {
 		target = <&i2c1>;
 		__overlay__ {
-			gt928@14 {
-                                compatible = "goodix,gt928";
+			gt911@14 {
+                                compatible = "goodix,gt911";
                                 reg = <0x14>;
 
                                 interrupt-parent = <&gpioi>;
                                 interrupts = <11 2>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
 
-                                irq-gpios = <&gpioi 11 0>;      /* PI11 */
-                                reset-gpios = <&gpioa 14 0>;    /* PA14: GPIO_ACTIVE_HIGH */
+                                irq-gpios = <&gpioi 11 0>;      /* PH10 */
+                                reset-gpios = <&gpioa 14 0>;    /* PA13: GPIO_ACTIVE_HIGH */
 
+                                touchscreen-swapped-x-y;
                         };
 		};
 	};
