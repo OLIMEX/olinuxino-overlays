@@ -3,7 +3,7 @@
 
 / {
 	compatible = "allwinner,sun5i-a13";
-	description = "Enable SPI1 bus";
+	description = "Enable SPI2 bus";
 
 	fragment@0 {
 		target-path = "/aliases";
