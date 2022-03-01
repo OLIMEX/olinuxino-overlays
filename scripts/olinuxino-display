@@ -168,6 +168,13 @@ for choice in $choices; do
 		fi
 		id=9278
 		;;
+	"LCD-OLinuXino-7CTS TS Inv")
+		overlay="lcd-olinuxino-7cts"
+		if [ "${soc}" == "stm32mp1" ] ; then
+		        overlay="lcd-stm32mp1-7cts"
+		fi
+		id=92781
+		;;
 	"LCD-OLinuXino-7RTS")
 		overlay="lcd-olinuxino-7"
 		id=9281
@@ -311,6 +318,16 @@ if [[ "${id}" == "9278" ]]; then
 		LIST="${LIST} ${target_overlay}"
 	fi
 fi
+
+if [[ "${id}" == "92781"]]; then
+	unset target_overlay
+	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911inv.dtbo"); do
+		compatible="$(fdtget $f / compatible)"
+		grep -q -w "${board}" <<< ${compatible} && \
+			target_overlay=${f} &&
+			break
+	
+	done
 
 if [[ "${id}" == "9284" ]]; then
 	unset target_overlay
