@@ -83,6 +83,7 @@ function display_error_dialog()
 		"LCD-OLinuXino-7TS"	"800x480 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-7RTS"	"800x480 panel with resistive TS and I2C interface"
 		"LCD-OLinuXino-7CTS"	"1024x600 panel with capacitive TS and I2C interface"
+		"LCD-OLinuXino-7CTS-TS-Inv"	"1024x600 panel with capacitive TS and I2C interface (Inv)"
 		"LCD-OLinuXino-10"	"1024x600 panel without TS"
 		"LCD-OLinuXino-10TS"	"1024x600 panel with resistive TS and analog interface"
 		"LCD-OLinuXino-10RTS"	"1024x600 panel with resistive TS and I2C interface"
@@ -168,7 +169,7 @@ for choice in $choices; do
 		fi
 		id=9278
 		;;
-	"LCD-OLinuXino-7CTS TS Inv")
+	"LCD-OLinuXino-7CTS-TS-Inv")
 		overlay="lcd-olinuxino-7cts"
 		if [ "${soc}" == "stm32mp1" ] ; then
 		        overlay="lcd-stm32mp1-7cts"
@@ -326,8 +327,11 @@ if [[ "${id}" == "92781"]]; then
 		grep -q -w "${board}" <<< ${compatible} && \
 			target_overlay=${f} &&
 			break
-	
 	done
+	if [[ ! -z ${target_overlay} ]]; then
+		LIST="${LIST} ${target_overlay}"
+	fi
+fi
 
 if [[ "${id}" == "9284" ]]; then
 	unset target_overlay
