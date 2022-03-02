@@ -320,7 +320,7 @@ if [[ "${id}" == "9278" ]]; then
 	fi
 fi
 
-if [[ "${id}" == "92781"]]; then
+if [[ "${id}" == "92781" ]]; then
 	unset target_overlay
 	for f in $(find /usr/lib/olinuxino-overlays/${soc} -name "*gt911inv.dtbo"); do
 		compatible="$(fdtget $f / compatible)"
