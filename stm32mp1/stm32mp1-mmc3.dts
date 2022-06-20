@@ -25,6 +25,32 @@
 
 				};
 			};
+			sdmmc3_od_pins_a: sdmmc3-od-0 {
+                                pins1 {
+                                        pinmux = < 0x500a 0x540a 0x550a 0x370b  >;
+			 	 	slew-rate = <1>;
+		                        drive-push-pull;
+                        		bias-pull-up;
+
+                                };
+
+                                pins2 {
+                                        pinmux = <0x6f0b>; /* G15  */
+                                        slew-rate = <2>;
+                                        drive-push-pull;
+                                        bias-pull-up;
+
+                                };
+
+				pins3 {
+                                        pinmux = <0x510a>; /* F1  */
+                                        slew-rate = <1>;
+                                        drive-open-drain;
+                                        bias-pull-up;
+
+                                };
+
+                        };
 
 			sdmmc3_sleep_pins_a: sdmmc3-sleep-1 {
 				pins {
@@ -37,9 +63,10 @@
 	fragment@2 {
 		target = <&sdmmc3>;
 		__overlay__ {
-			pinctrl-names = "default", "sleep";
+			pinctrl-names = "default", "opendrain", "sleep";
 			pinctrl-0 = <&sdmmc3_pins_a>;
-			pinctrl-1 = <&sdmmc3_sleep_pins_a>;
+			pinctrl-1 = <&sdmmc3_od_pins_a>;
+			pinctrl-2 = <&sdmmc3_sleep_pins_a>;
 			status = "okay";
 			broken-cd;
         		st,neg-edge;
