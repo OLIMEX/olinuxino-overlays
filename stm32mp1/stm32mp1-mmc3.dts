@@ -1,0 +1,50 @@
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,stm32mp1xx-olinuxino-lime";
+	description = "Enable MMC3 extension";
+
+	fragment@0 {
+		target = <&pinctrl>;
+		__overlay__ {
+			sdmmc3_pins_a: sdmmc3-0 {
+				pins1 {
+					pinmux = < 0x500a 0x540a 0x550a 0x370b 0x510a >;
+					drive-push-pull;
+					slew-rate = <1>;
+					bias-pull-up;
+				};
+
+				pins2 {
+					pinmux = <0x6f0b>; /* G15  */
+					slew-rate = <2>;
+		                        drive-push-pull;
+                		        bias-pull-up;
+
+				};
+			};
+
+			sdmmc3_sleep_pins_a: sdmmc3-sleep-1 {
+				pins {
+					pinmux = <0x5011 0x5411 0x5511 0x3711 0x5111 0x6f11 >;
+				};
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&sdmmc3>;
+		__overlay__ {
+			pinctrl-names = "default", "sleep";
+			pinctrl-0 = <&sdmmc3_pins_a>;
+			pinctrl-1 = <&sdmmc3_sleep_pins_a>;
+			status = "okay";
+			broken-cd;
+        		st,neg-edge;
+        		bus-width = <4>;
+        		vmmc-supply = <&vdd_sd3v3>;
+		};
+	};
+};
