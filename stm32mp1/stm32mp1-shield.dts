@@ -1,0 +1,250 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,stm32mp1xx-olinuxino-lime";
+	description = "STM32MP1xx Lime shield";
+
+	 fragment@0 {
+                target = <&pinctrl>;
+                __overlay__ {
+                        usart3_pins_s: usart3-1 {
+                                pins1 {
+                                        pinmux = <0x3808>;/* PD8 USART3_TX */
+                                        bias-disable;
+                                        drive-push-pull;
+                                        slew-rate = <0>;
+                                };
+                                pins2 {
+                                        pinmux = <0x3908>; /* PD9 USART3_RX */
+                                        bias-disable;
+                                };
+                        };
+                        usart3_idle_pins_a: usart3-idle-0 {
+                                pins1 {
+                                        pinmux = <0x3811>; /* PD8 USART3_TX */
+                                };
+                                pins2 {
+                                        pinmux = <0x3908>; /* PD9 USART3_RX */
+                                        bias-disable;
+                                };
+                        };
+                        usart3_sleep_pins_a: usart3-sleep-0 {
+                                pins {
+                                        pinmux = <0x3811 0x3911>;
+                                };
+                        };
+
+
+			i2c2_pins_s: i2c2-1 {
+                                pins {
+                                        pinmux = <0x7405 0x19104>; /* PH4 PZ1*/
+                                        bias-disable;                            /*pull disable*/
+                                        drive-open-drain;                        /*open drain enable*/
+                                        slew-rate = <0>;
+                                };
+                        };
+
+                        i2c2_pins_sleep_s: i2c2-xx {
+                                pins {
+                                        pinmux = <0x7411 0x19111>;
+                                };
+                        };
+			
+			spi4_pins_s: spi4-1 {
+                                pins1 {
+                                        pinmux = < 0x4c06 0x4e06 >; /*SPI4_SCK PE12, SPI4_MOSI PE14*/
+                                        bias-disable;
+                                        drive-push-pull;
+                                        slew-rate = <1>;
+                                };
+
+                                pins2 {
+                                        pinmux = <0x4d06>; /* SPI4_MISO PE13*/
+                                        bias-disable;
+                                };
+                        };
+
+                        spi4_sleep_pins_s: spi4-sleep-1 {
+                                pins {
+                                        pinmux = <0x4c11 0x4d11 0x4e11 >;
+                                };
+                        };
+			/*UEXT 2*/
+			uart8_pins_s: uart8-1 {
+                                pins1 {
+                                        pinmux = <0x4109>;/* PE0 UART8_TX */
+                                        bias-disable;
+                                        drive-push-pull;
+                                        slew-rate = <0>;
+                                };
+                                pins2 {
+                                        pinmux = <0x4009>; /* PE1 UART8_RX */
+                                        bias-disable;
+                                };
+                        };
+                        uart8_idle_pins_a: uart8-idle-0 {
+                                pins1 {
+                                        pinmux = <0x4111>; /* USART8_TX */
+                                };
+                                pins2 {
+                                        pinmux = <0x4009>; /* USART8_RX */
+                                        bias-disable;
+                                };
+                        };
+                        uart8_sleep_pins_a: uart8-sleep-0 {
+                                pins {
+                                        pinmux = <0x4111 0x4011>;
+                                };
+                        };
+
+			   i2c6_pins_s: i2c6-1 {
+                                pins {
+                                        pinmux = <0x19603 0x19703>; /*I2C6_SCL PZ6, I2C7_SDA PZ07*/
+                                        bias-disable;                            /*pull disable*/
+                                        drive-open-drain;                        /*open drain enable*/
+                                        slew-rate = <0>;
+                                };
+                        };
+
+                        i2c6_pins_sleep_s: i2c6-xx {
+                                pins {
+                                        pinmux = <0x19611 0x19711>;
+                                };
+                        };
+
+			spi2_pins_s: spi2-1 {
+                                pins1 {
+                                        pinmux = < 0x8106 0x8306 >; /*SPI2_SCK PI1,SPI2_MOSI PI3*/
+                                        bias-disable;
+                                        drive-push-pull;
+                                        slew-rate = <1>;
+                                };
+
+                                pins2 {
+                                        pinmux = <0x8206>; /* SPI2_MISO PI2*/
+                                        bias-disable;
+                                };
+                        };
+
+                        spi2_sleep_pins_s: spi2-sleep-1 {
+                                pins {
+                                        pinmux = <0x8111 0x8211 0x8311 >;
+                                };
+                        };
+			
+                };    //end overlay
+
+        }; //end fragment
+
+        fragment@1 {
+                target = <&usart3>;
+                __overlay__ {
+                        pinctrl-names = "default";
+                        pinctrl-0 = <&usart3_pins_s>;
+                        pinctrl-1 = <&usart3_sleep_pins_a>;
+                        pinctrl-2 = <&usart3_idle_pins_a>;
+                        st,hw-flow-ctrl;
+                        status = "okay";
+                };
+        };
+
+        fragment@2 {
+                target-path = "/aliases";
+                __overlay__ {
+                        serial3 = "/soc/serial@4000f000";
+                };
+        };
+
+	fragment@3 {
+                target = <&i2c2>;
+
+                __overlay__ {
+                        pinctrl-names = "default", "sleep";
+                        pinctrl-0 = <&i2c2_pins_s>;
+                        pinctrl-1 = <&i2c2_pins_sleep_s>;
+                        i2c-scl-rising-time-ns = <185>;
+                        i2c-scl-falling-time-ns = <20>;
+                        clock-frequency = <400000>;
+                        status = "okay";
+                        /delete-property/dmas;
+                        /delete-property/dma-names;
+                };
+        };
+	
+	fragment@4 {
+                target = <&spi4>;
+                __overlay__ {
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        pinctrl-names = "default", "sleep";
+                        pinctrl-0 = <&spi4_pins_s>;
+                        pinctrl-1 = <&spi4_sleep_pins_s>;
+                        cs-gpios = <&gpioe 11 1>;
+                        status = "okay";
+                        spi0channel@0 {
+                                #address-cells = <1>;
+                                #size-cells = <0>;
+                                compatible = "spidev";
+                                reg = <0>;
+                                spi-max-frequency = <20000000>;
+                        };
+                };
+        };
+
+	fragment@5 {
+                target = <&uart8>;
+                __overlay__ {
+                        pinctrl-names = "default";
+                        pinctrl-0 = <&uart8_pins_s>;
+                        pinctrl-1 = <&uart8_sleep_pins_a>;
+                        pinctrl-2 = <&uart8_idle_pins_a>;
+                        st,hw-flow-ctrl;
+                        status = "okay";
+                };
+        };
+
+        fragment@6 {
+                target-path = "/aliases";
+                __overlay__ {
+                        serial8 = "/soc/serial@40019000";
+                };
+        };
+
+	fragment@7 {
+                target = <&i2c6>;
+                __overlay__ {
+                        pinctrl-names = "default", "sleep";
+                        pinctrl-0 = <&i2c6_pins_s>;
+                        pinctrl-1 = <&i2c6_pins_sleep_s>;
+                        i2c-scl-rising-time-ns = <185>;
+                        i2c-scl-falling-time-ns = <20>;
+                        clock-frequency = <400000>;
+                        status = "okay";
+                        /delete-property/dmas;
+                        /delete-property/dma-names;
+                };
+        };
+	
+	 fragment@8 {
+                target = <&spi2>;
+                __overlay__ {
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        pinctrl-names = "default", "sleep";
+                        pinctrl-0 = <&spi2_pins_s>;
+                        pinctrl-1 = <&spi2_sleep_pins_s>;
+                        cs-gpios = <&gpioi 0 1>;
+                        status = "okay";
+                        spi0channel@0 {
+                                #address-cells = <1>;
+                                #size-cells = <0>;
+                                compatible = "spidev";
+                                reg = <0>;
+                                spi-max-frequency = <20000000>;
+                        };
+                };
+        };
+
+};
+	
