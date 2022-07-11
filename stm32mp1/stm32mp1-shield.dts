@@ -196,7 +196,7 @@
                         pinctrl-1 = <&spi4_sleep_pins_s>;
                         cs-gpios = <&gpioe 11 1>;
                         status = "okay";
-                        spi0channel@0 {
+                        spi4channel@0 {
                                 #address-cells = <1>;
                                 #size-cells = <0>;
                                 compatible = "spidev";
@@ -250,7 +250,7 @@
                         pinctrl-1 = <&spi2_sleep_pins_s>;
                         cs-gpios = <&gpioi 0 1>;
                         status = "okay";
-                        spi0channel@0 {
+                        spi2channel@0 {
                                 #address-cells = <1>;
                                 #size-cells = <0>;
                                 compatible = "spidev";
