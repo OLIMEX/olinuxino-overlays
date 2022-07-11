@@ -73,22 +73,22 @@
 			/*UEXT 2*/
 			uart8_pins_s: uart8-1 {
                                 pins1 {
-                                        pinmux = <0x4109>;/* PE0 UART8_TX */
+                                        pinmux = <0x4009>;/* PE0 UART8_TX */
                                         bias-disable;
                                         drive-push-pull;
                                         slew-rate = <0>;
                                 };
                                 pins2 {
-                                        pinmux = <0x4009>; /* PE1 UART8_RX */
+                                        pinmux = <0x4109>; /* PE1 UART8_RX */
                                         bias-disable;
                                 };
                         };
                         uart8_idle_pins_a: uart8-idle-0 {
                                 pins1 {
-                                        pinmux = <0x4111>; /* USART8_TX */
+                                        pinmux = <0x4011>; /* USART8_TX */
                                 };
                                 pins2 {
-                                        pinmux = <0x4009>; /* USART8_RX */
+                                        pinmux = <0x4109>; /* USART8_RX */
                                         bias-disable;
                                 };
                         };
