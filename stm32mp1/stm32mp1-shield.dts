@@ -149,7 +149,7 @@
 
 
 		}
-	}
+	};
 
        fragment@2 {
                 target = <&usart3>;
