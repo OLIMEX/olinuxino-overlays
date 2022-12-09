@@ -4,7 +4,7 @@
 / {
 	compatible = "olimex,stm32mp1xx-olinuxino-som",
                      "olimex,stm32mp1xx-olinuxino-lime",
-		     "stm32mp1xx-olinuxino-som-base";
+		     "olimex,stm32mp1xx-olinuxino-som-base";
 
 	description = "LCD-OLinuXino-10CTS 1024x600 with capacitive TS and I2C interface";
 
