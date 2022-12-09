@@ -3,7 +3,8 @@
 
 / {
 	compatible = "olimex,stm32mp1xx-olinuxino-som",
-                     "olimex,stm32mp1xx-olinuxino-lime";
+                     "olimex,stm32mp1xx-olinuxino-lime",
+		     "stm32mp1xx-olinuxino-som-base";
 
 	description = "STM32MP1-OLinuXino Enable HDMI";
 
