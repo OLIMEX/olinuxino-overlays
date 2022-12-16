@@ -1,0 +1,63 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "olimex,stm32mp1xx-olinuxino-som",
+                     "olimex,stm32mp1xx-olinuxino-lime",
+		     "olimex,stm32mp1xx-olinuxino-som-base";
+
+	description = "LCD-OLinuXino-10CTS 1024x600 with capacitive TS and I2C interface";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			display_bl: display-bl {
+                                    compatible = "pwm-backlight";
+                                    pwms = <&pwm4 1 50000 1>;
+                                    brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+                                    default-brightness-level = <10>;
+                                    enable-gpios = <&gpiof 13 0>;
+                                    status = "okay";
+                        };
+			panel {
+                              compatible = "olimex,lcd-olinuxino-10";
+                              backlight = <&display_bl>;
+                              port {
+                                lcd_panel_in: endpoint {
+                                       remote-endpoint = <&lcd_display_out>;
+                                };
+                            };
+                      };
+		};
+	};
+
+	fragment@1 {
+		target = <&ltdc>;
+		__overlay__ {
+                port {
+                        lcd_display_out: endpoint {
+                        remote-endpoint = <&lcd_panel_in>;
+                    };
+               };
+	    };
+	};
+
+	fragment@2 {
+		target = <&i2c1>;
+		__overlay__ {
+			gt911@14 {
+                                compatible = "goodix,gt911";
+                                reg = <0x14>;
+
+                                interrupt-parent = <&gpioi>;
+                                interrupts = <11 2>;          /* PI11: IRQ_TYPE_EDGE_FALLING */
+
+                                irq-gpios = <&gpioi 11 0>;      /* PH10 */
+                                reset-gpios = <&gpioa 14 0>;    /* PA13: GPIO_ACTIVE_HIGH */
+
+                                //touchscreen-swapped-x-y;
+                        };
+		};
+	};
+};
+	
