@@ -6,7 +6,7 @@
                      "olimex,stm32mp1xx-olinuxino-lime",
 		     "olimex,stm32mp1xx-olinuxino-som-base";
 
-	description = "LCD-OLinuXino-10CTS 1024x600 with capacitive TS and I2C interface";
+	description = "LCD-OLinuXino-7CTS 1024x600 with capacitive TS and I2C interface";
 
 	fragment@0 {
 		target-path = "/";
