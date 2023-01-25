@@ -52,6 +52,7 @@
                                 reg = <0x4d>;
                                 interrupt-parent = <&gpioi>;
                                 interrupts = <11 2>;          /* PH12: IRQ_TYPE_LEVEL_HIGH */
+                                irq-gpios = <&gpioi 11 0>;      /* PH10 */
                                 touchscreen-inverted-y;
                         };
 
