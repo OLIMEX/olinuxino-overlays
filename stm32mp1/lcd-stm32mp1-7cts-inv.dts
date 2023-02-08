@@ -20,7 +20,7 @@
                                     status = "okay";
                         };
 			panel {
-                              compatible = "olimex,lcd-olinuxino-10";
+                              compatible = "olimex,lcd-olinuxino-7inv"; //olimex,lcd-olinuxino-7inv
                               backlight = <&display_bl>;
                               port {
                                 lcd_panel_in: endpoint {
