@@ -173,7 +173,7 @@ for choice in $choices; do
 	"LCD-OLinuXino-7CTS-TS-Inv")
 		overlay="lcd-olinuxino-7cts"
 		if [ "${soc}" == "stm32mp1" ] ; then
-		        overlay="lcd-stm32mp1-7cts"
+		        overlay="lcd-stm32mp1-7cts-inv"
 		fi
 		id=92781
 		;;
