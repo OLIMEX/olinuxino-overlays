@@ -146,6 +146,9 @@ for choice in $choices; do
 		;;
 	"LCD-OLinuXino-4.3RTS")
 		overlay="lcd-olinuxino-4.3"
+		if [ "${soc}" == "stm32mp1" ] ; then
+			overlay="lcd-stm32mp1-4.3"
+		fi
 		id=9290
 		;;
 	"LCD-OLinuXino-5")
