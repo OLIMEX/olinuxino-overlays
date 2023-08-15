@@ -4,7 +4,9 @@
 
 / {
 	compatible = "olimex,stm32mp1xx-olinuxino-som",
-		     "olimex,stm32mp1xx-olinuxino-lime";
+		     "olimex,stm32mp1xx-olinuxino-lime",
+		     "olimex,stm32mp1xx-olinuxino-som-base";
+
 	description = "Enable SPI4 port";
 
 	fragment@0 {
