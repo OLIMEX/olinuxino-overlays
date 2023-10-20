@@ -1,0 +1,15 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+		     "olimex,a64-olinuxino";
+	description = "Enable TWI2 bus";
+
+	fragment@0 {
+		target = <&i2c2>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};
