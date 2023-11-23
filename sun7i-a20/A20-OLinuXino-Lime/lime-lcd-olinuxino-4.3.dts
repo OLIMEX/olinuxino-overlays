@@ -54,6 +54,7 @@
 				       "PD15", "PD16", "PD17", "PD18", "PD19",
 				       "PD20", "PD21", "PD22", "PD23", "PD24",
 				       "PD25", "PD26", "PD27";
+				drive-strength = <40>;	   
 				function = "lcd0";
 			};
 		};

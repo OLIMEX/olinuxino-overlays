@@ -68,6 +68,7 @@
 			lcd_lvds0_pins: lcd-lvds0-pins {
 				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
 				       "PD5", "PD6", "PD7", "PD8", "PD9";
+				drive-strength = <40>;
 				function = "lvds0";
 			};
 		};
