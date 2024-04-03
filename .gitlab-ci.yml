@@ -17,7 +17,7 @@ build:
     paths:
       - $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/*
   script:
-    - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
+    - git checkout -B "$CI_COMMIT_REF_NAME" "$CI_COMMIT_SHA"
     - sed -i "s/BUILD_DATE/$(date +%Y%m%d%H%M%S)/g" debian/changelog
     - dpkg-buildpackage --post-clean -uc -us
     - mkdir $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA && cp -vf ../olinuxino-overlays_*.* $CI_PROJECT_NAME-$CI_COMMIT_SHORT_SHA/
