@@ -1,0 +1,22 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "allwinner,sun50i-a64",
+                     "olimex,a64-olinuxino";
+	description = "Enable 1-Wire port (on PE12: pin 29 of GPIO1)";
+
+	fragment@0 {
+		target-path="/";
+		__overlay__ {
+			onewire {
+				compatible = "w1-gpio";
+				gpios = <&pio 4 12 16>;
+				/* 4: E of PE12
+				12: 12 of PE12
+				16: GPIO_PULL_UP as defined in dt-bindings/gpio/gpio.h */
+				status = "okay";
+			};
+		};
+	};
+};
