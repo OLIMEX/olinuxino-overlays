@@ -411,20 +411,4 @@ if [[ -z ${id} ]]; then
 	fi
 fi
 
-# generate stm32mp1 xorg conf
-if [ "${soc}" == "stm32mp1" ] ; then
-	cat > /usr/share/X11/xorg.conf.d/92-etnaviv.conf << EOF
-Section "Device"
-  Identifier "etnaviv"
-  Driver "modesetting"
-  Option "kmsdev" "/dev/dri/card1"
-  Option "AccelMethod" "none"
-EndSection
-
-Section "ServerFlags"
-  Option "AutoAddGPU" "false"
-EndSection
-EOF
-fi
-
 display_reboot_dialog
