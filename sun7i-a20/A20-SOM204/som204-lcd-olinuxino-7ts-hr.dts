@@ -79,7 +79,7 @@
 	};
 
 	       /* new fragment for  TCON0 – will enable  DE and FRM */
-       fragment@4 {
+       fragment@5 {
                target = <&tcon0>;
                __overlay__ {
                        /* bit 27  TCON0_IO_POL_REG (0x01C0C088) */
