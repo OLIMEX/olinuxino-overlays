@@ -4,7 +4,7 @@
 / {
 	compatible = "olimex,a20-olinuxino-micro",
 		     "olimex,a20-olinuxino-micro-emmc";
-	description = "LCD-OLinuXino-10CTS 1024x600 with capacitive TS and I2C interface";
+	description = "LCD-OLinuXino-7TS 1024x600 with resistive TS and analog interface";
 
 	fragment@0 {
 		target-path = "/";
@@ -70,16 +70,22 @@
 		};
 	};
 
-	/* new fragment for  TCON0 – will enable  DE and FRM */
 	fragment@4 {
-		target = <&tcon0>;
+		target = <&rtp>;
 		__overlay__ {
-			/* bit 27  TCON0_IO_POL_REG (0x01C0C088) */
-			allwinner,tcon0-de-negative;
-
-			/* bit 31  TCON_FRM_CTL_REG (0x01C0C010) */
-			allwinner,tcon0-frm-enable;
+			allwinner,ts-attached;
+			touchscreen-inverted-x;
 		};
 	};
-};
+	
+	fragment@4 {
+               target = <&tcon0>;
+               __overlay__ {
+                       /* bit 27  TCON0_IO_POL_REG (0x01C0C088) */
+                       allwinner,tcon0-de-negative;
 
+                       /* bit 31  TCON_FRM_CTL_REG (0x01C0C010) */
+                       allwinner,tcon0-frm-enable;
+               };
+       };
+};
