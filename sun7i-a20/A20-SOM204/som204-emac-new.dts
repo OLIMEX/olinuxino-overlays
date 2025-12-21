@@ -1,11 +1,10 @@
 /dts-v1/;
 /plugin/;
 
-
 / {
 	compatible = "olimex,a20-olimex-som204-evb",
 		     "olimex,a20-olimex-som204-evb-emmc";
-	description = "Enable 100M EMAC2 (disable GMAC + disable CAN pins + CAN_CTRL high)";
+	description = "Enable 100M EMAC2 (disable GMAC + disable CAN + CAN_CTRL high)";
 
 	/* Disable GMAC */
 	fragment@0 {
@@ -27,25 +26,32 @@
 				       "PH26", "PH27";
 				function = "emac";
 			};
+		};
+	};
 
-			/*
-			 * CAN_CTRL on PA9 must be HIGH so the CAN driver/transceiver
-			 * is disabled and doesn't fight the 100M PHY signals.
-			 */
-			can_ctrl_disable_hog: can-ctrl-disable-hog {
-				gpio-hog;
-				gpios = <0 9 0>; /* PA9 */
-				output-high;
-				line-name = "can_ctrl_disable";
+	/* NEW: Drive PA9 high using gpio-leds (safe, no gpiochip failure) */
+	fragment@2 {
+		target-path = "/";
+		__overlay__ {
+			can_ctrl_lines: can-ctrl-lines {
+				compatible = "gpio-leds";
+
+				/* PA9 физически HIGH => CAN драйвер disable */
+				can_ctrl_disable: can_ctrl_disable {
+					label = "can_ctrl_disable";
+					gpios = <&pio 0 9 0>;      /* 0 = ACTIVE_HIGH */
+					default-state = "on";     /* => HIGH */
+				};
 			};
 		};
 	};
 
 	/* MDIO + PHY on EMAC2, PC18 reset line */
-	fragment@2 {
+	fragment@3 {
 		target = <&mdio>;
 		__overlay__ {
 			phy-supply = <&reg_vcc3v3>;
+			/* 1 = ACTIVE_LOW (reset#) */
 			reset-gpios = <&pio 2 18 1>; /* PC18 MEPHY-RST# */
 			status = "okay";
 
@@ -56,7 +62,7 @@
 	};
 
 	/* Enable EMAC2 */
-	fragment@3 {
+	fragment@4 {
 		target = <&emac>;
 		__overlay__ {
 			pinctrl-names = "default";
@@ -66,7 +72,7 @@
 		};
 	};
 
-	fragment@4 {
+	fragment@5 {
 		target = <&emac_sram>;
 		__overlay__ {
 			status = "okay";
@@ -74,10 +80,11 @@
 	};
 
 	/* Disable CAN controller so it releases PH20/PH21 */
-	fragment@5 {
+	fragment@6 {
 		target = <&can0>;
 		__overlay__ {
 			status = "disabled";
 		};
 	};
 };
+
