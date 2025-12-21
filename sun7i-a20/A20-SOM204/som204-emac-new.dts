@@ -34,7 +34,7 @@
 			 */
 			can_ctrl_disable_hog: can-ctrl-disable-hog {
 				gpio-hog;
-				gpios = <0 9 GPIO_ACTIVE_HIGH>; /* PA9 */
+				gpios = <0 9 0>; /* PA9 */
 				output-high;
 				line-name = "can_ctrl_disable";
 			};
@@ -46,7 +46,7 @@
 		target = <&mdio>;
 		__overlay__ {
 			phy-supply = <&reg_vcc3v3>;
-			reset-gpios = <&pio 2 18 GPIO_ACTIVE_LOW>; /* PC18 MEPHY-RST# */
+			reset-gpios = <&pio 2 18 1>; /* PC18 MEPHY-RST# */
 			status = "okay";
 
 			phy1: ethernet-phy@1 {
