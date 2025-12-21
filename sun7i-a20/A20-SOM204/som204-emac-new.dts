@@ -1,7 +1,6 @@
 /dts-v1/;
 /plugin/;
 
-#include <dt-bindings/gpio/gpio.h>
 
 / {
 	compatible = "olimex,a20-olimex-som204-evb",
