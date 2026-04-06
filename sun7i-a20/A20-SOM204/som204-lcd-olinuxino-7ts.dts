@@ -77,4 +77,12 @@
 			touchscreen-inverted-x;
 		};
 	};
+	
+	fragment@5 {
+               target = <&tcon0>;
+               __overlay__ {
+                       /* bit 31  TCON_FRM_CTL_REG (0x01C0C010) */
+                       allwinner,tcon0-frm-enable;
+               };
+       };
 };
